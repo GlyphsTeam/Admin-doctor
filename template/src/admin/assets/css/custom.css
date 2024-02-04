@@ -10,7 +10,9 @@
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
 }
-
+a{
+  text-decoration: none !important;
+}
 .css-equal-content {
   color: red;
   float: left;

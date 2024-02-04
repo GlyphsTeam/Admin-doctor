@@ -30,7 +30,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 //   require("./client/assets/css/custom.css");
 // } 
 // console.log('window.location.pathname :>> ', window.location.pathname);
- if (window.location.pathname.includes("admin")) {
+
   require("./admin/assets/css/feathericon.min.css");
   require("./admin/assets/js/feather.min.js");
   // require("./admin/assets/plugins/fontawesome/css/fontawesome.min.css");
@@ -38,7 +38,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
   // require("./admin/assets/plugins/fontawesome/js/fontawesome.min.js");
   require("./admin/assets/css/font-awesome.min.css");
   require("./admin/assets/css/custom.css");
-} 
+
 
 // ReactDOM.render(<AppRouter/>, document.getElementById('root'));
 

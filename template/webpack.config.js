@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-dupe-keys */
 /* eslint-disable no-undef */
+// Admin-dashboard
 const path = require("path");
 const webpack = require("webpack");
 
@@ -18,7 +19,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
   },
   devServer: {
-    port: 3001,
+    port: 3003,
     historyApiFallback: true,
     onAfterSetupMiddleware() {
       opn(`http://localhost:${this.port}/admin`);
