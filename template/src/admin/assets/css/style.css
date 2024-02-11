@@ -9,6 +9,12 @@
   display: -webkit-flex;
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
+} 
+.register_doctor{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  
 }
 
 .css-equal-content {

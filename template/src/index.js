@@ -3,7 +3,9 @@ import ReactDOM from "react-dom/client";
 
 import AppRouter from "./approuter";
 // import * as serviceWorker from './client/serviceWorker';
+import { Provider } from 'react-redux';
 
+import store from './store/index';
 
 // boostrap
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -31,15 +33,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // } 
 // console.log('window.location.pathname :>> ', window.location.pathname);
 
-  require("./admin/assets/css/feathericon.min.css");
-  require("./admin/assets/js/feather.min.js");
-  // require("./admin/assets/plugins/fontawesome/css/fontawesome.min.css");
-  require("./admin/assets/plugins/fontawesome/css/all.min.css");
-  // require("./admin/assets/plugins/fontawesome/js/fontawesome.min.js");
-  require("./admin/assets/css/font-awesome.min.css");
-  require("./admin/assets/css/custom.css");
-
-
+require("./admin/assets/css/feathericon.min.css");
+require("./admin/assets/js/feather.min.js");
+// require("./admin/assets/plugins/fontawesome/css/fontawesome.min.css");
+require("./admin/assets/plugins/fontawesome/css/all.min.css");
+// require("./admin/assets/plugins/fontawesome/js/fontawesome.min.js");
+require("./admin/assets/css/font-awesome.min.css");
+require("./admin/assets/css/custom.css");
+require("./client/assets/css/custom.css")
 // ReactDOM.render(<AppRouter/>, document.getElementById('root'));
 
 // if (module.hot) { // enables hot module replacement if plugin is installed
@@ -49,6 +50,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
-    <AppRouter />
+    <Provider store={store}>
+      <AppRouter />
+    </Provider>
+
   </>
 );

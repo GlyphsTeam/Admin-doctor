@@ -10,6 +10,15 @@
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
 }
+.add_doctor{
+  width: fit-content;
+  margin: 10px;
+  border: none;
+  background-color: #00d0f1;
+  padding: 8px;
+  color: #fff;
+  font-weight: 600;
+}
 a{
   text-decoration: none !important;
 }

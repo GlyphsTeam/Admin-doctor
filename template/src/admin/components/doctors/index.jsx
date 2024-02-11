@@ -187,7 +187,7 @@ const Doctors = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <div className="page-header">
-            <div className="row">
+            <div className="row register_doctor">
               <div className="col-sm-12">
                 <h3 className="page-title">List of Doctors</h3>
                 <ul className="breadcrumb">
@@ -197,6 +197,8 @@ const Doctors = () => {
                   <li className="breadcrumb-item active">List of Doctors</li>
                 </ul>
               </div>
+
+             <Link to="/admin/doctor-register"><button className="add_doctor">Add a doctor</button></Link>
             </div>
           </div>
           {/* /Page Header */}

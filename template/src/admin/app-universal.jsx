@@ -42,6 +42,10 @@ const DataTables = lazy(() => import("./components/datatables"));
 const BasicTables = lazy(() => import("./components/basictables"));
 const ProductCategories = lazy(() => import("./components/productlist/ProductCategories"));
 const InvoiceReportList = lazy(() => import("./components/Reports/InvoiceReport/InvoiceReportList"));
+const DoctorRegister = lazy(() => import("./components/doctor-register/index"));
+const Registerstepone = lazy(() => import("./components/doctor-register/registerstepone"));
+const Registersteptwo = lazy(() => import("./components/doctor-register/registersteptwo"));
+const Registerstepthree = lazy(() => import("./components/doctor-register/registerstepthree"));
 
 const AppUniversal = function (props) {
   const [menu, setMenu] = useState(false);
@@ -102,6 +106,26 @@ const AppUniversal = function (props) {
               path="/admin/transactions-list"
               exact
               component={Transaction}
+            />
+            <Route
+              path="/admin/doctor-register"
+              exact
+              component={DoctorRegister}
+            />
+            <Route
+              path="/admin/registerstepone"
+              exact
+              component={Registerstepone}
+            />
+            <Route
+              path="/admin/register-step-2"
+              exact
+              component={Registersteptwo}
+            />
+            <Route
+              path="/admin/register-step- 3"
+              exact
+              component={Registerstepthree}
             />
             <Route path="/admin/settings" exact component={Settings} />
             <Route path="/admin/invoicerepot" exact component={InvoiceReport} />
