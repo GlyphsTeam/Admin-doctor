@@ -7,7 +7,7 @@ import dashboard from './Dashboard/dashboard';
 import appointments from './Appointments/appointments';
 import setting from './Setting/setting';
 import auth from './Auth/auth';
-
+import register from './DoctorRegister/register'
 
 const store = configureStore({
   reducer: {
@@ -18,7 +18,8 @@ const store = configureStore({
     dashboard: dashboard,
     appointments: appointments,
     setting: setting,
-    auth: auth
+    auth: auth,
+    register:register
   }
 });
 

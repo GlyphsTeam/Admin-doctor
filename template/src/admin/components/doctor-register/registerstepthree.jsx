@@ -1,19 +1,100 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import loginBanner from '../../../assets/images/login-banner.png';
 import Logo from "../../assets/img/logo.png";
 // import camera from '../../../assets/images/icons/camera.svg';
 // import male from '../../../assets/images/icons/male.png'
 // import female from '../../../assets/images/icons/female.png'
-
-import { Link } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
+import Alert from '../Alert/Alert';
+import {
+  setAddrees,
+  setAge,
+  setCertfcation,
+  setCity,
+  setGender,
+  setHeight,
+  setImage,
+  setName,
+  setPassword,
+  setPhone,
+  setState,
+  setUploadImg,
+  setWight,
+  setZipCode,
+} from "../../../store/DoctorRegister/register"
 const Registerstepthree = () => {
   useEffect(() => {
     document.body.classList.add("account-page");
 
     return () => document.body.classList.remove("account-page");
   }, []);
+  const [count, setCount] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
+  const [type, setType] = useState("");
+  const [message, setMessage] = useState("");
+  const registerState = useSelector((state) => state.register);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const showAlertMessage = (message, type) => {
+    setCount(1);
+    setMessage(message);
+    setType(type);
+    setShowAlert(true);
+  };
 
+  const handlerRegister = (e) => {
+    e.preventDefault();
+
+    const cityValue = e.target.city.value;
+    const stateValue = e.target.state.value;
+
+    if (!cityValue) {
+      showAlertMessage("The City field is requried.", "warning");
+    }
+    if (!stateValue) {
+      showAlertMessage("The state field is requried.", "warning");
+    }
+
+    if (cityValue && stateValue) {
+      dispatch(setCity(cityValue));
+      dispatch(setState(stateValue));
+
+      let formData = new FormData();
+
+      formData.append("name", registerState.name);
+      formData.append("password", registerState.password);
+      formData.append("phone", registerState.phone);
+      formData.append("img", registerState.img);
+      formData.append("gender", registerState.gender);
+      formData.append("address", registerState.address);
+      formData.append("zipcode", registerState.zipCode);
+      formData.append("certifcate", registerState.certifcate);
+      formData.append("uploadImg", registerState.uploadImg);
+      formData.append("weight", registerState.weight);
+      formData.append("height", registerState.height);
+      formData.append("age", registerState.age);
+      formData.append("city", registerState.city);
+      formData.append("state", registerState.state);
+
+      dispatch(setAddrees(""));
+      dispatch(setPassword(""));
+      dispatch(setPhone(""));
+      dispatch(setUploadImg(null));
+      dispatch(setGender(""));
+      dispatch(setZipCode(""));
+      dispatch(setHeight(""));
+      dispatch(setWight(""));
+      dispatch(setAge(""));
+      dispatch(setCity(""));
+      dispatch(setState(""));
+      dispatch(setImage(null));
+      dispatch(setName(""));
+      dispatch(setCertfcation(null));
+      history.push("")
+    }
+
+  }
   return (
     <>
       <>
@@ -48,14 +129,14 @@ const Registerstepthree = () => {
                           </li>
                         </ul>
                       </div>
-                      <form method="post">
+                      <form onSubmit={handlerRegister}>
                         <h3 className="my-4">Your Location</h3>
                         <div className="form-group">
                           <label>Select City</label>
                           <select
                             className="form-select form-control"
-                            id="heart_rate"
-                            name="heart_rate"
+                            id="city"
+                            name="city"
                             tabIndex={-1}
                             aria-hidden="true"
                           >
@@ -68,8 +149,8 @@ const Registerstepthree = () => {
                           <label>Select State</label>
                           <select
                             className="form-select form-control"
-                            id="bp"
-                            name="bp"
+                            id="state"
+                            name="state"
                             tabIndex={-1}
                             aria-hidden="true"
                           >
@@ -100,6 +181,14 @@ const Registerstepthree = () => {
         </div>
         {/* /Page Content */}
       </>
+      <Alert
+        count={count}
+        message={message}
+        setCount={setCount}
+        setShow={setShowAlert}
+        show={showAlert}
+        type={type}
+      />
     </>
   );
 };

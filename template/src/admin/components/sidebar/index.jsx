@@ -83,6 +83,12 @@ const SidebarNav = () => {
                     <span>Dashboard</span>
                   </Link>
                 </li>
+                <li className={pathname === "/edithome" ? "active" : ""}>
+                  <Link to="/admin/edithome">
+                    <i className="fe fe-home"></i>
+                    <span>Edit Home</span>
+                  </Link>
+                </li>
                 <li
                   className={
                     pathname?.includes("/admin/appointment-list")

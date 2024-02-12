@@ -1,0 +1,26 @@
+:root {
+    --hover-color:#00d0f1;
+    --backgroundPrimary:#19c1dc;
+    --primary-color:#028ee1;
+    --text-color:#009efb;
+    --blue-color:#20c0f3;
+    --white-color:#ffffff;
+    --black-33:#333333;
+    --success-color:#699834;
+    --success2-color:#7bb13c;
+    --danger-color:#e84646;
+    --danger2-color:#e63333;
+    --warning-color:#ffbc34;
+    --warning2-color:#e9ab2e;
+    --sidebar-color:#1b5a90;
+    --red-color:red;
+    --table-color:#f8f9fa;
+    --border-color:#dddddd;
+    --link-color:#0dd9f9;
+    --gray-color:#cccccc;
+    --menu-color:#e3e3e3;
+    --dropdown-color:#f9f9f9;
+    --selecter-color:#272b41;
+    --light-color:#e6e6e6;
+    --header-color:#f0f0f0;
+}

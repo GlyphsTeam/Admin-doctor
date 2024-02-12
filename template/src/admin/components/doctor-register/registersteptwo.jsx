@@ -1,18 +1,110 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import loginBanner from "../../../assets/images/login-banner.png";
 import Logo from "../../assets/img/logo.png";
 import camera from "../../assets/icons/camera.svg";
 import male from "../../assets/icons/male.png";
 import female from "../../assets/icons/female.png";
+import Alert from '../Alert/Alert';
 
-import { Link } from "react-router-dom";
+import {
+  setZipCode,
+  setAddrees,
+  setAge,
+  setGender,
+  setCertfcation,
+  setWight,
+  setHeight,
+} from '../../../store/DoctorRegister/register';
+import { Link, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
 
 const Registersteptwo = () => {
+  const dispatch = useDispatch();
+  const registerState = useSelector((state) => state.register);
+  const history = useHistory();
+
   useEffect(() => {
     document.body.classList.add("account-page");
 
+
     return () => document.body.classList.remove("account-page");
   }, []);
+
+  const [count, setCount] = useState(0);
+  const [message, setMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [type, setType] = useState("");
+
+  const showAlertMessage = (message, type) => {
+    setCount(1);
+    setMessage(message);
+    setShowAlert(true);
+    setType(type);
+  };
+
+  const handlerRegister = (e) => {
+
+    e.preventDefault();
+
+
+
+    const genderValue = e.target.gender.value;
+    const addressValue = e.target.address.value;
+    const zipcodeValue = e.target.zipcode.value;
+    const weightValue = e.target.weight.value;
+    const heightValue = e.target.height.value;
+    const ageValue = e.target.age.value;
+
+
+
+
+
+    if (!ageValue) {
+      showAlertMessage("The Age field is required.", "warning");
+    }
+    if (!heightValue) {
+      showAlertMessage("The Height field is required.", "warning");
+    }
+    if (!weightValue) {
+      showAlertMessage("The Weight field is required.", "warning");
+    }
+    if (!zipcodeValue) {
+      showAlertMessage("The Zipcode field is required.", "warning");
+    }
+
+    if (!addressValue) {
+      showAlertMessage("The Address field is required.", "warning");
+    }
+    if (!genderValue) {
+      showAlertMessage("The Gender  field is required.", "warning");
+    }
+
+    if (genderValue !== ""
+      && addressValue !== ""
+      && zipcodeValue !== ""
+      && weightValue !== ""
+      && heightValue !== ""
+      && ageValue !== "") {
+
+      dispatch(setGender(genderValue));
+      dispatch(setAddrees(addressValue));
+      dispatch(setZipCode(zipcodeValue));
+      dispatch(setWight(weightValue));
+      dispatch(setHeight(heightValue));
+      dispatch(setAge(ageValue));
+      history.push("/admin/register-step- 3");
+    }
+
+  }
+  const handlerUpload = (e) => {
+    const image = e.target.files[0];
+    if (!image.type.startsWith('image/')) {
+      showAlertMessage("The Certigifcate is requried", "warning");
+    }
+    else {
+      dispatch(setCertfcation(image))
+    }
+  }
   return (
     <>
       {/* Page Content */}
@@ -44,7 +136,7 @@ const Registersteptwo = () => {
                         </li>
                       </ul>
                     </div>
-                    <form id="personal_details" encType="multipart/form-data">
+                    <form id="personal_details" onSubmit={handlerRegister}>
                       <div className="text-start mt-2">
                         <h4 className="mt-3">Select Your Gender</h4>
                       </div>
@@ -162,7 +254,7 @@ const Registersteptwo = () => {
                             <div className="col-12 col-md-6 d-flex">
                               <div className="profile-pic-upload d-flex flex-wrap justify-content-center">
                                 <div className="cam-col">
-                                  <img src={camera} alt="" />
+                                  <img src={registerState.certifcate ? URL.createObjectURL(registerState.certifcate) : camera} alt="" />
                                 </div>
                                 <span className="text-center">
                                   Upload Rigth To sell Certigifcate
@@ -170,6 +262,7 @@ const Registersteptwo = () => {
                                 <input
                                   type="file"
                                   id="quali_certificate"
+                                  onChange={(e) => handlerUpload(e)}
                                   name="quali_certificate"
                                 />
                               </div>
@@ -215,6 +308,7 @@ const Registersteptwo = () => {
                                 className="form-control"
                                 name="weight"
                                 id="weight"
+
                               />
                             </div>
                             <div className="col-5 ps-2">
@@ -238,6 +332,7 @@ const Registersteptwo = () => {
                                 type="text"
                                 className="form-control"
                                 id="height"
+                                name="height"
                               />
                             </div>
                             <div className="col-5 ps-2">
@@ -285,12 +380,11 @@ const Registersteptwo = () => {
                         </div>
                       </div>
                       <div className="mt-5">
-                        <Link
-                          to="/admin/register-step- 3"
+                        <button
                           className="btn btn-primary w-100 btn-lg login-btn step2_submit"
                         >
                           continue{" "}
-                        </Link>
+                        </button>
                       </div>
                     </form>
                   </div>
@@ -304,6 +398,14 @@ const Registersteptwo = () => {
           {/* /Register Content */}
         </div>
       </div>
+      <Alert
+        count={count}
+        message={message}
+        setCount={setCount}
+        setShow={setShowAlert}
+        show={showAlert}
+        type={type}
+      />
       {/* /Page Content */}
     </>
   );

@@ -3,10 +3,11 @@ import React, { useState, useContext, useMemo, lazy, Suspense } from "react";
 import config from "config";
 
 import { Route, BrowserRouter, Switch } from "react-router-dom";
-
+import Loading from './components/Loading/Loading';
 import { Appcontext } from "../approuter";
 const Header = lazy(() => import("./components/header/index"));
 const Dashboard = lazy(() => import("./components/dashboard"));
+const EditHome = lazy(() => import("./components/editHome/index"));
 const Appointments = lazy(() => import("./components/appointments"));
 const Specialities = lazy(() => import("./components/specialities"));
 const Doctors = lazy(() => import("./components/doctors"));
@@ -73,7 +74,7 @@ const AppUniversal = function (props) {
   }, [location]);
 
   return (
-    <Suspense fallback={<p>Loading...</p>}>
+    <Suspense fallback={<Loading />}>
       <BrowserRouter basename={`${config.publicPath}`}>
         <div className={`main-wrapper ${menu ? "slide-nav" : ""}`}>
           {isAuth !== "admin" && (
@@ -97,6 +98,11 @@ const AppUniversal = function (props) {
               path="/admin/appointment-list"
               exact
               component={Appointments}
+            />
+            <Route
+              path="/admin/edithome"
+              exact
+              component={EditHome}
             />
             <Route path="/admin/specialities" exact component={Specialities} />
             <Route path="/admin/doctor-list" exact component={Doctors} />

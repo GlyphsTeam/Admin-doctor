@@ -1,9 +1,48 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { logoWhite } from "../imagepath";
+import { emailValidation } from "../../../helper/helper";
 import { Link } from "react-router-dom";
-
+import Alert from "../Alert/Alert";
 const Login = () => {
-  const config = "/react/template";
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  const [count, setCount] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [type, setType] = useState("");
+
+  const showAlertMessage = (message, type) => {
+    setCount(1);
+    setShowAlert(true);
+    setMessage(message);
+    setType(type);
+  };
+
+  const handlerLogin = (e) => {
+    e.preventDefault();
+
+    const emailValue = emailRef.current.value;
+    const passwordValue = passwordRef.current.value;
+
+    if (!passwordValue) {
+      showAlertMessage("The Password field is requried", "warning");
+    }
+    if (emailValidation(emailValue)) {
+      showAlertMessage("The Email is not valid", "warning");
+    }
+
+    if (emailValue === "") {
+      showAlertMessage("The Email field is requried.", "warning");
+    }
+
+    if (emailValue && !emailValidation(emailValue) && passwordValue) {
+      let formData = new FormData();
+
+      formData.append("email", emailValue);
+      formData.append("password", passwordValue);
+    }
+  }
   // const [shouldReload, setShouldReload] = useState(true);
 
   // useEffect(() => {
@@ -26,9 +65,10 @@ const Login = () => {
                   <h1>Login</h1>
                   <p className="account-subtitle">Access to our dashboard</p>
                   {/* Form */}
-                  <form action={`${config}/admin`}>
+                  <form onSubmit={handlerLogin}>
                     <div className="form-group">
                       <input
+                        ref={emailRef}
                         className="form-control"
                         type="text"
                         placeholder="Email"
@@ -36,6 +76,7 @@ const Login = () => {
                     </div>
                     <div className="form-group">
                       <input
+                        ref={passwordRef}
                         className="form-control"
                         type="text"
                         placeholder="Password"
@@ -76,6 +117,14 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <Alert
+        count={count}
+        message={message}
+        setCount={setCount}
+        setShow={setShowAlert}
+        show={showAlert}
+        type={type}
+      />
     </>
   );
 };

@@ -40,7 +40,8 @@ require("./admin/assets/plugins/fontawesome/css/all.min.css");
 // require("./admin/assets/plugins/fontawesome/js/fontawesome.min.js");
 require("./admin/assets/css/font-awesome.min.css");
 require("./admin/assets/css/custom.css");
-require("./client/assets/css/custom.css")
+require("./client/assets/css/custom.css");
+require("./App.css");
 // ReactDOM.render(<AppRouter/>, document.getElementById('root'));
 
 // if (module.hot) { // enables hot module replacement if plugin is installed
