@@ -83,7 +83,7 @@ const SidebarNav = () => {
                     <span>Dashboard</span>
                   </Link>
                 </li>
-                <li className={pathname === "/edithome" ? "active" : ""}>
+                <li className={pathname === "/admin/edithome" ? "active" : ""}>
                   <Link to="/admin/edithome">
                     <i className="fe fe-home"></i>
                     <span>Edit Home</span>
@@ -127,52 +127,11 @@ const SidebarNav = () => {
                     <i className="fe fe-star-o"></i> <span>Reviews</span>
                   </Link>
                 </li>
-                <li
-                  className={
-                    pathname?.includes("transactions-list") ? "active" : ""
-                  }
-                >
-                  <Link to="/admin/transactions-list">
-                    <i className="fe fe-activity"></i>
-                    <span>Transactions</span>
-                  </Link>
-                </li>
+              
                 <li className={pathname?.includes("settings") ? "active" : ""}>
                   <Link to="/admin/settings">
                     <i className="fe fe-vector"></i> <span> Settings</span>
                   </Link>
-                </li>
-                <li className="submenu">
-                  <Link
-                    to="#"
-                    className={isSideMenu == "reports" ? "subdrop" : ""}
-                    onClick={() =>
-                      toggleSidebar(isSideMenu == "reports" ? "" : "reports")
-                    }
-                  >
-                    <i className="fe fe-document"></i>
-                    <span> Reports</span> <span className="menu-arrow"></span>
-                  </Link>
-                  {isSideMenu == "reports" ? (
-                    <ul
-                      style={{
-                        display: isSideMenu == "reports" ? "block" : "none",
-                      }}
-                    >
-                      <li>
-                        <Link
-                          to="/admin/invoicerepot"
-                          className={
-                            pathname?.includes("invoicerepot") ? "active" : ""
-                          }
-                        >
-                          Invoice Report
-                        </Link>
-                      </li>
-                    </ul>
-                  ) : (
-                    ""
-                  )}
                 </li>
                 <li className="menu-title">
                   <span>Pages</span>
@@ -236,18 +195,7 @@ const SidebarNav = () => {
                         Forgot Password{" "}
                       </Link>
                     </li>
-                    <li>
-                      <Link
-                        to="/admin/lockscreen"
-                        className={
-                          pathname?.includes("lockscreen") ? "active" : ""
-                        }
-                        onClick={() => setIsAuth("admin")}
-                      >
-                        {" "}
-                        Lock Screen{" "}
-                      </Link>
-                    </li>
+              
                   </ul>
                 </li>
                 <li className="submenu">

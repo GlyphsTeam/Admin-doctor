@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { logoWhite } from "../imagepath";
 import { emailValidation } from "../../../helper/helper";
 import { Link } from "react-router-dom";
 import Alert from "../Alert/Alert";
 const Login = () => {
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [count, setCount] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
@@ -22,25 +23,29 @@ const Login = () => {
   const handlerLogin = (e) => {
     e.preventDefault();
 
-    const emailValue = emailRef.current.value;
-    const passwordValue = passwordRef.current.value;
-
-    if (!passwordValue) {
+    if (!password) {
       showAlertMessage("The Password field is requried", "warning");
     }
-    if (emailValidation(emailValue)) {
+    if (emailValidation(email)) {
       showAlertMessage("The Email is not valid", "warning");
     }
 
-    if (emailValue === "") {
+    if (email === "") {
       showAlertMessage("The Email field is requried.", "warning");
     }
 
-    if (emailValue && !emailValidation(emailValue) && passwordValue) {
+    if (email && !emailValidation(email) && password) {
       let formData = new FormData();
 
-      formData.append("email", emailValue);
-      formData.append("password", passwordValue);
+      formData.append("email", email);
+      formData.append("password", password);
+
+      setEmail("");
+      setPassword("");
+
+      e.target.reset();
+      // emailRef.current = "";
+      // passwordRef.current = "";
     }
   }
   // const [shouldReload, setShouldReload] = useState(true);
@@ -68,7 +73,7 @@ const Login = () => {
                   <form onSubmit={handlerLogin}>
                     <div className="form-group">
                       <input
-                        ref={emailRef}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="form-control"
                         type="text"
                         placeholder="Email"
@@ -76,7 +81,7 @@ const Login = () => {
                     </div>
                     <div className="form-group">
                       <input
-                        ref={passwordRef}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="form-control"
                         type="text"
                         placeholder="Password"

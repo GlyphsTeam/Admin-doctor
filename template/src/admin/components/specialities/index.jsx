@@ -126,13 +126,13 @@ const Specialities = () => {
                 </ul>
               </div>
               <div className="col-sm-5 col">
-                <a
-                  href="#Add_Specialities_details"
+                <Link
+                  to="/admin/add-specialities"
                   data-bs-toggle="modal"
                   className="btn btn-primary float-end mt-2"
                 >
                   Add
-                </a>
+                </Link>
               </div>
             </div>
           </div>

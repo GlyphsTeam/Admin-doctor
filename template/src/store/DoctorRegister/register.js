@@ -8,14 +8,16 @@ const initialState = {
     img: null,
     gender: "",
     address: "",
-    zipCode: "",
     certifcate: null,
     uploadImg: null,
-    weight: "",
-    height: "",
-    age: "",
+    date: "",
     city: "",
     state: "",
+    cardNumber: "",
+    nationality: "",
+    doctorId: "",
+    specialities: ""
+
 };
 
 const registerSlice = createSlice({
@@ -40,50 +42,48 @@ const registerSlice = createSlice({
         setAddrees: (state, actions) => {
             state.address = actions.payload
         },
-        setZipCode: (state, actions) => {
-            state.zipCode = actions.payload
-        },
+
         setCertfcation: (state, actions) => {
             state.certifcate = actions.payload
         },
         setUploadImg: (state, actions) => {
             state.uploadImg = actions.payload
         },
-        setWight: (state, actions) => {
-            state.weight = actions.payload
+        setDate: (state, actions) => {
+            state.date = actions.payload;
         },
-        setHeight: (state, actions) => {
-            state.height = actions.payload
+        setCardNumber: (state, actions) => {
+            state.cardNumber = actions.payload;
         },
-        setAge: (state, actions) => {
-            state.age = actions.payload
+        setNationality: (state, actions) => {
+            state.nationality = actions.payload
         },
-        setCity: (state, actions) => {
-            state.city = actions.payload
+        setDoctorID: (state, actions) => {
+            state.doctorId = actions.payload
         },
-        setState: (state, actions) => {
-            state.state = actions.payload
+        setSpecialities: (state, actions) => {
+            state.specialities = actions.payload
         }
+
     }
 });
 
 export const stateRegister = ((state) => state.register);
 
 export const {
-    setState,
-    setCity,
-    setAge,
-    setHeight,
-    setWight,
     setUploadImg,
     setCertfcation,
-    setZipCode,
     setAddrees,
     setGender,
     setImage,
     setPhone,
     setName,
-    setPassword
+    setPassword,
+    setCardNumber,
+    setDate,
+    setDoctorID,
+    setNationality,
+    setSpecialities
 } = registerSlice.actions;
 
 export default registerSlice.reducer;

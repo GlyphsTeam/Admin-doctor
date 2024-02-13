@@ -1,8 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import { logoWhite } from "../imagepath";
 import { Link } from "react-router-dom";
+import { emailValidation } from '../../../helper/helper';
+import Alert from '../Alert/Alert';
+
 const ForgotPassword = () => {
-  const config = "/react/template";
+  
+  const [count, setCount] = useState(0);
+  const [type, setType] = useState("");
+  const [message, setMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+
+  const showAlertMessage = (message, type) => { 
+    setCount(1);
+    setMessage(message);
+    setType(type);
+    setShowAlert(true);
+  }
+
+  const handlerForget = (e) => {
+    e.preventDefault();
+
+    const email = e.target.email.value;
+
+
+    if(emailValidation(email)){
+      showAlertMessage("The Email is not valid", "warning");
+    }
+    if (!email) {
+      showAlertMessage("The Email feild is requried", "warning")
+    }
+    
+    if(email){
+      let formData = new FormData();
+      formData.append("email", email);
+      e.target.reset();
+    }
+
+  }
   return (
     <>
       <div className="main-wrapper login-body">
@@ -19,11 +54,13 @@ const ForgotPassword = () => {
                     Enter your email to get a password reset link
                   </p>
                   {/* Form */}
-                  <form action={`${config}admin/login`}>
+                  <form onSubmit={handlerForget}>
                     <div className="form-group">
                       <input
                         className="form-control"
-                        type="text"
+                        type="email"
+                        name="email"
+                        id="email"
                         placeholder="Email"
                       />
                     </div>
@@ -43,6 +80,14 @@ const ForgotPassword = () => {
           </div>
         </div>
       </div>
+      <Alert
+       count={count}
+       message={message}
+       setCount={setCount}
+       setShow={setShowAlert}
+       show={showAlert}
+       type={type}
+      />
     </>
   );
 };

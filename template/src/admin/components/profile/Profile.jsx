@@ -21,7 +21,7 @@ const Profile = () => {
           <div className="page-header">
             <div className="row">
               <div className="col">
-                <h3 className="page-title">Profile</h3>
+                <h3 className="page-title">Admin Profile</h3>
                 <ul className="breadcrumb">
                   <li className="breadcrumb-item">
                     <Link to="/admin">Dashboard</Link>

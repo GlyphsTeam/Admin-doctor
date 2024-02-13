@@ -7,13 +7,19 @@ import female from "../../assets/icons/female.png";
 import Alert from '../Alert/Alert';
 
 import {
-  setZipCode,
-  setAddrees,
-  setAge,
+  setName,
+  setPassword,
+  setImage,
   setGender,
   setCertfcation,
-  setWight,
-  setHeight,
+  setUploadImg,
+  setCardNumber,
+  setPhone,
+  setDate,
+  setDoctorID,
+  setNationality,
+  setSpecialities,
+
 } from '../../../store/DoctorRegister/register';
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,57 +55,79 @@ const Registersteptwo = () => {
 
 
     const genderValue = e.target.gender.value;
-    const addressValue = e.target.address.value;
-    const zipcodeValue = e.target.zipcode.value;
-    const weightValue = e.target.weight.value;
-    const heightValue = e.target.height.value;
-    const ageValue = e.target.age.value;
+    const dateValue = e.target.date.value;
+    const specialitiesValue = e.target.specialities.value;
+    const idnumber = e.target.idnumber.value;
+    const nationalityValue = e.target.nationality;
+    const cardNumberValue = e.target.cardnumber;
 
-
-
-
-
-    if (!ageValue) {
+    if (!specialitiesValue) {
+      showAlertMessage("The Specialities fuekd us required.", "warning");
+    }
+    if (!dateValue) {
       showAlertMessage("The Age field is required.", "warning");
     }
-    if (!heightValue) {
-      showAlertMessage("The Height field is required.", "warning");
-    }
-    if (!weightValue) {
-      showAlertMessage("The Weight field is required.", "warning");
-    }
-    if (!zipcodeValue) {
-      showAlertMessage("The Zipcode field is required.", "warning");
-    }
 
-    if (!addressValue) {
-      showAlertMessage("The Address field is required.", "warning");
+    if (!idnumber) {
+      showAlertMessage("The ID number field is required.", "warning");
+    }
+    if (!nationalityValue) {
+      showAlertMessage("The Nationality feild is required.", "warning");
+    }
+    if (!cardNumberValue) {
+      showAlertMessage("The Card Number feild is required", "warning");
     }
     if (!genderValue) {
       showAlertMessage("The Gender  field is required.", "warning");
     }
 
     if (genderValue !== ""
-      && addressValue !== ""
-      && zipcodeValue !== ""
-      && weightValue !== ""
-      && heightValue !== ""
-      && ageValue !== "") {
-
+      && dateValue !== ""
+      && specialitiesValue !== ""
+      && dateValue !== ""
+      && idnumber !== ""
+      && nationalityValue !== ""
+      && cardNumberValue !== ""
+    ) {
       dispatch(setGender(genderValue));
-      dispatch(setAddrees(addressValue));
-      dispatch(setZipCode(zipcodeValue));
-      dispatch(setWight(weightValue));
-      dispatch(setHeight(heightValue));
-      dispatch(setAge(ageValue));
+      dispatch(setDate(dateValue));
+      let formData = new FormData();
+
+      formData.append("name", registerState.name);
+      formData.append("password", registerState.password);
+      formData.append("phone", registerState.phone);
+      formData.append("img", registerState.img);
+      formData.append("gender", registerState.gender);
+      formData.append("address", registerState.address);
+      formData.append("certifcate", registerState.certifcate);
+      formData.append("uploadImg", registerState.uploadImg);
+      formData.append("date", registerState.date);
+      formData.append("cardNumber", registerState.cardNumber);
+      formData.append("nationality", registerState.nationality);
+      formData.append("doctorId", registerState.doctorId);
+      formData.append("specialities", registerState.specialities);
+
+      dispatch(setDoctorID(""));
+      dispatch(setCardNumber(""));
+      dispatch(setNationality(""));
+      dispatch(setSpecialities(""));
+      dispatch(setPassword(""));
+      dispatch(setPhone(""));
+      dispatch(setUploadImg(null));
+      dispatch(setGender(""));
+      dispatch(setImage(null));
+      dispatch(setName(""));
+      dispatch(setCertfcation(null));
       history.push("/admin/register-step- 3");
     }
-
   }
   const handlerUpload = (e) => {
     const image = e.target.files[0];
-    if (!image.type.startsWith('image/')) {
-      showAlertMessage("The Certigifcate is requried", "warning");
+    console.log(image)
+    if (image?.type !== 'image/jpeg' &&
+      image?.type !== 'image/png' &&
+      image?.type !== 'image/jpg') {
+      showAlertMessage("The Image must be jpeg or png or jpg", "warning");
     }
     else {
       dispatch(setCertfcation(image))
@@ -173,23 +201,7 @@ const Registersteptwo = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="pregnant-col pt-4">
-                        <div>
-                          <div className="remember-me-col d-flex justify-content-between">
-                            <span className="mt-1">Are you Registered?</span>
-                            <label className="custom_check">
-                              <input
-                                type="checkbox"
-                                className=""
-                                id="is_registered"
-                                name="isregistered"
-                                defaultValue={1}
-                              />
-                              <span className="checkmark" />
-                            </label>
-                          </div>
-                        </div>
-                      </div>
+
                       <div className="step-process-col mt-4">
                         <div
                           className="form-group"
@@ -222,23 +234,33 @@ const Registersteptwo = () => {
                           </select>
                         </div>
                         <div className="form-group">
-                          <label>Registered Clinic address</label>
+                          <label>Residence Card Number (Validation)</label>
                           <input
                             type="text"
-                            name="address"
+                            name="cardnumber"
                             className="form-control"
-                            id="address"
+                            id="cardnumber"
                           />
                         </div>
                         <div className="form-group">
-                          <label>Address 2</label>
+                          <label>Nationality</label>
                           <input
                             type="text"
-                            name="address2"
+                            name="nationality"
                             className="form-control"
-                            id="address2"
+                            id="nationality"
                           />
                         </div>
+                        <div className="form-group">
+                          <label>Doctor ID Number</label>
+                          <input
+                            type="text"
+                            name="idnumber"
+                            className="form-control"
+                            id="idnumber"
+                          />
+                        </div>
+                        {/*                     
                         <div className="form-group">
                           <label>Pincode / Zipcoode</label>
                           <input
@@ -247,7 +269,7 @@ const Registersteptwo = () => {
                             className="form-control"
                             id="zipcode"
                           />
-                        </div>
+                        </div> */}
                         <div className="form-group">
                           <label>Certification and Employer</label>
                           <div className="row justify-content-center">
@@ -300,82 +322,29 @@ const Registersteptwo = () => {
                           </div>
                         </div>
                         <div className="form-group">
-                          <label>Your Weight</label>
-                          <div className="row">
-                            <div className="col-7 pe-0">
-                              <input
-                                type="text"
-                                className="form-control"
-                                name="weight"
-                                id="weight"
-
-                              />
-                            </div>
-                            <div className="col-5 ps-2">
-                              <select
-                                className="form-select form-control"
-                                id="weight_unit"
-                                name="weight_unit"
-                                tabIndex={-1}
-                                aria-hidden="true"
-                              >
-                                <option value="kg">Kg</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="form-group">
-                          <label>Your Height</label>
-                          <div className="row">
-                            <div className="col-7 pe-0">
-                              <input
-                                type="text"
-                                className="form-control"
-                                id="height"
-                                name="height"
-                              />
-                            </div>
-                            <div className="col-5 ps-2">
-                              <select
-                                className="form-select form-control"
-                                id="height_unit"
-                                name="height_unit"
-                                tabIndex={-1}
-                                aria-hidden="true"
-                              >
-                                <option value="cm">cm</option>
-                                <option value="ft">ft</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="form-group">
-                          <label>Your Age</label>
+                          <label>Your Date</label>
                           <input
-                            type="text"
-                            name="age"
+                            type="date"
+                            name="date"
                             className="form-control"
-                            id="age"
+                            id="date"
                           />
                         </div>
                         <div className="form-group">
-                          <label>Blood Type</label>
+                          <label>Specialities</label>
                           <select
                             className="form-select form-control"
-                            id="blood_group"
-                            name="blood_group"
+                            id="specialities"
+                            name="specialities"
                             tabIndex={-1}
                             aria-hidden="true"
                           >
                             <option value="">Select your blood group</option>
-                            <option value="A-">A-</option>
-                            <option value="A+">A+</option>
-                            <option value="B-">B-</option>
-                            <option value="B+">B+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="O-">O-</option>
-                            <option value="O+">O+</option>
+                            <option value="A-">Urology</option>
+                            <option value="A+">Neurology</option>
+                            <option value="B-">Orthopedic</option>
+                            <option value="B+">Cardiologist</option>
+                            <option value="AB-">Dentist</option>
                           </select>
                         </div>
                       </div>

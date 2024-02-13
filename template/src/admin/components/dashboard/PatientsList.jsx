@@ -16,7 +16,6 @@ const PatientsListDesboard = () => {
       Address: "4417 Goosetown Drive, Taylorsville, North Carolina, 28681",
       Phone: "8286329170",
       VisitLast: "20 Oct 2019",
-      Paid: "$100.00",
       image: patient1,
     },
     {
@@ -27,7 +26,6 @@ const PatientsListDesboard = () => {
       Address: "4026 Fantages Way, Brunswick, Maine, 04011 ",
       Phone: "2077299974",
       VisitLast: "22 Oct 2019",
-      Paid: "$200.00",
       image: patient2,
     },
     {
@@ -38,7 +36,6 @@ const PatientsListDesboard = () => {
       Address: "2037 Pearcy Avenue, Decatur, Indiana, 46733 ",
       Phone: "2607247769",
       VisitLast: "21 Oct 2019",
-      Paid: "$250.00",
       image: patient3,
     },
     {
@@ -49,7 +46,6 @@ const PatientsListDesboard = () => {
       Address: "2037 Pearcy Avenue, Decatur, Indiana, 46733 ",
       Phone: "5043686874",
       VisitLast: "21 Sep 2019",
-      Paid: "$150.00",
       image: patient4,
     },
     {
@@ -60,7 +56,6 @@ const PatientsListDesboard = () => {
       Address: "888 Everette Alley, Hialeah, Florida, 33012 ",
       Phone: "9548207887",
       VisitLast: "18 Sep 2019",
-      Paid: "$350.00",
       image: patient5,
     },
   ];
@@ -89,11 +84,7 @@ const PatientsListDesboard = () => {
       dataIndex: "VisitLast",
       sorter: (a, b) => a.length - b.length,
     },
-    {
-      title: "Paid",
-      dataIndex: "Paid",
-      sorter: (a, b) => a.Paid.length - b.Paid.length,
-    },
+ 
   ];
   return (
     <>

@@ -33,7 +33,6 @@ const Patients = () => {
       Address: "4417 Goosetown Drive, Taylorsville, North Carolina, 28681",
       Phone: "8286329170",
       VisitLast: "20 Oct 2019",
-      Paid: "$100.00",
       image: patient1,
     },
     {
@@ -44,7 +43,6 @@ const Patients = () => {
       Address: "4026 Fantages Way, Brunswick, Maine, 04011 ",
       Phone: "2077299974",
       VisitLast: "22 Oct 2019",
-      Paid: "$200.00",
       image: patient2,
     },
     {
@@ -55,7 +53,6 @@ const Patients = () => {
       Address: "2037 Pearcy Avenue, Decatur, Indiana, 46733 ",
       Phone: "2607247769",
       VisitLast: "21 Oct 2019",
-      Paid: "$250.00",
       image: patient3,
     },
     {
@@ -66,7 +63,6 @@ const Patients = () => {
       Address: "2037 Pearcy Avenue, Decatur, Indiana, 46733 ",
       Phone: "5043686874",
       VisitLast: "21 Sep 2019",
-      Paid: "$150.00",
       image: patient4,
     },
     {
@@ -77,7 +73,6 @@ const Patients = () => {
       Address: "888 Everette Alley, Hialeah, Florida, 33012 ",
       Phone: "9548207887",
       VisitLast: "18 Sep 2019",
-      Paid: "$350.00",
       image: patient5,
     },
     {
@@ -88,7 +83,6 @@ const Patients = () => {
       Address: "644 Coffman Alley, Bowling Green, Kentucky, 42101 ",
       Phone: "3153844562",
       VisitLast: "18 Sep 2019",
-      Paid: "$300.00",
       image: patient6,
     },
     {
@@ -99,7 +93,6 @@ const Patients = () => {
       Address: "2399 Hillview Drive, San Francisco, California, 94103 ",
       Phone: "7072202603",
       VisitLast: "18 Sep 2019",
-      Paid: "$250.00",
       image: patient7,
     },
     {
@@ -110,7 +103,6 @@ const Patients = () => {
       Address: "4914 Hilltop Haven Drive, Passaic, New Jersey, 07055 ",
       Phone: "9737739497",
       VisitLast: "7 Sep 2019",
-      Paid: "$150.00",
       image: patient8,
     },
     {
@@ -121,7 +113,6 @@ const Patients = () => {
       Address: "1299 Star Trek Drive, Panama City, Florida, 32405 ",
       Phone: "8503584445",
       VisitLast: "11 Sep 2019",
-      Paid: "$100.00",
       image: patient9,
     },
     {
@@ -132,7 +123,7 @@ const Patients = () => {
       Address: "1214 Hamill Avenue, Del Mar, California, 92014 ",
       Phone: "8582595285",
       VisitLast: "12 Sep 2019",
-      Paid: "$120.00",
+
       image: patient10,
     },
     {
@@ -143,7 +134,6 @@ const Patients = () => {
       Address: "4566 Sampson Street, Denver, Colorado, 80202 ",
       Phone: "3036077075",
       VisitLast: "14 Sep 2019",
-      Paid: "$130.00",
       image: patient11,
     },
     {
@@ -154,7 +144,6 @@ const Patients = () => {
       Address: "1996 Crummit Lane, Beatrice, Nebraska, 68310 ",
       Phone: "4022231492",
       VisitLast: "7 Nov 2019",
-      Paid: "$160.00",
       image: patient12,
     },
     {
@@ -165,7 +154,6 @@ const Patients = () => {
       Address: "4211 Vesta Drive, TOLEDO, Washington, 98591 ",
       Phone: "7737265795",
       VisitLast: "9 Nov 2019",
-      Paid: "$290.00",
       image: patient13,
     },
     {
@@ -176,7 +164,6 @@ const Patients = () => {
       Address: "186 Bryan Street, Greensboro, North Carolina, 27409 ",
       Phone: "3362314023",
       VisitLast: "5 Nov 2019",
-      Paid: "$300.00",
       image: patient14,
     },
     {
@@ -187,7 +174,6 @@ const Patients = () => {
       Address: "4672 Rose Street, Schaumburg, Illinois, 60173 ",
       Phone: "7082788201",
       VisitLast: "6 Nov 2019",
-      Paid: "$310.00",
       image: patient15,
     },
   ];
@@ -231,11 +217,7 @@ const Patients = () => {
       dataIndex: "VisitLast",
       sorter: (a, b) => a.VisitLast.length - b.VisitLast.length,
     },
-    {
-      title: "Paid",
-      dataIndex: "Paid",
-      sorter: (a, b) => a.Paid.length - b.Paid.length,
-    },
+
   ];
   return (
     <>

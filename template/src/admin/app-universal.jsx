@@ -14,7 +14,7 @@ const Doctors = lazy(() => import("./components/doctors"));
 const Patients = lazy(() => import("./components/patients"));
 const Reviews = lazy(() => import("./components/reviews"));
 const Transaction = lazy(() => import("./components/transaction"));
-const Settings = lazy(() => import("./components/transaction"));
+const Settings = lazy(() => import("./components/settings/index"));
 const InvoiceReport = lazy(() => import("./components/Reports/InvoiceReport/InvoiceReport"));
 const ProductList = lazy(() => import("./components/productlist"));
 const PharmacyList = lazy(() => import("./components/pharmacylist"));
@@ -28,7 +28,6 @@ const Profile = lazy(() => import("./components/profile/Profile"));
 const Login = lazy(() => import("./components/login"));
 const Register = lazy(() => import("./components/register"));
 const ForgotPassword = lazy(() => import("./components/forgotpassword"));
-const Lockscreen = lazy(() => import("./components/lockscreen"));
 const Error = lazy(() => import("./components/error404"));
 const ErrorPage = lazy(() => import("./components/error500"));
 const BasicInput = lazy(() => import("./components/forms/baiscinput"));
@@ -46,7 +45,7 @@ const InvoiceReportList = lazy(() => import("./components/Reports/InvoiceReport/
 const DoctorRegister = lazy(() => import("./components/doctor-register/index"));
 const Registerstepone = lazy(() => import("./components/doctor-register/registerstepone"));
 const Registersteptwo = lazy(() => import("./components/doctor-register/registersteptwo"));
-const Registerstepthree = lazy(() => import("./components/doctor-register/registerstepthree"));
+const AddSpecialities = lazy(()=>import("./components/AddSpecialities/Form"));
 
 const AppUniversal = function (props) {
   const [menu, setMenu] = useState(false);
@@ -91,8 +90,8 @@ const AppUniversal = function (props) {
               path="/admin/forgotPassword"
               exact
               component={ForgotPassword}
+            
             />
-            <Route path="/admin/lockscreen" exact component={Lockscreen} />
             <Route path="/admin" exact component={Dashboard} />
             <Route
               path="/admin/appointment-list"
@@ -114,6 +113,11 @@ const AppUniversal = function (props) {
               component={Transaction}
             />
             <Route
+              path="/admin/add-specialities"
+              exact
+              component={AddSpecialities}
+            />
+            <Route
               path="/admin/doctor-register"
               exact
               component={DoctorRegister}
@@ -128,11 +132,7 @@ const AppUniversal = function (props) {
               exact
               component={Registersteptwo}
             />
-            <Route
-              path="/admin/register-step- 3"
-              exact
-              component={Registerstepthree}
-            />
+   
             <Route path="/admin/settings" exact component={Settings} />
             <Route path="/admin/invoicerepot" exact component={InvoiceReport} />
             <Route path="/admin/invoice" exact component={InvoiceReportList} />
