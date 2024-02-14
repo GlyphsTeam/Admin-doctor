@@ -11,7 +11,7 @@ const Patientregisterstepone = () => {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  const registerState = useSelector((state) => state.register);
+  const registerState = useSelector((state) => state.patient);
 
   const [count, setCount] = useState(0);
   const [type, setType] = useState("");
@@ -19,8 +19,8 @@ const Patientregisterstepone = () => {
   const [showAlert, setShowAlert] = useState(false);
 
 
-  const hanlderRegister = () => {
-
+  const hanlderRegister = (e) => {
+  e.preventDefault();
 
     history.push("/admin/patientregisterstep-2");
   }
@@ -68,7 +68,7 @@ const Patientregisterstepone = () => {
                           </li>
                         </ul>
                       </div>
-                      <form id="profile_pic_form" encType="multipart/form-data">
+                      <form onSubmit={hanlderRegister}>
                         <div className="profile-pic-col">
                           <h3>Profile Picture</h3>
                           <div className="profile-pic-upload">
@@ -83,15 +83,14 @@ const Patientregisterstepone = () => {
                             <span>Upload Profile Picture</span>
                             <input
                               type="file"
-                              id="profile_image"
-                              name="profile_image"
+
                               onChange={(e) => handlerUploadImage(e)}
                             />
                           </div>
                         </div>
                         <div className="mt-5">
                           <button
-                            onClick={() => hanlderRegister()}
+                            // onClick={() => hanlderRegister()}
                             className="btn btn-primary w-100 btn-lg login-btn step1_submit"
                           >
                             continue{" "}

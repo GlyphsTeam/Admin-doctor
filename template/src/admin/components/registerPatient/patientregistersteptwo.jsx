@@ -26,22 +26,23 @@ const Patientregistersteptwo = () => {
   const [count, setCount] = useState(0);
   const dispatch = useDispatch();
   const history = useHistory();
-  const [artery ,setArtery] = useState(null);
 
 
-  console.log("artery>>",artery)
   const handlerRegister = (e) => {
     e.preventDefault();
-    console.log("artery>>",artery)
-
+    
     const gender = e.target.gender.value;
     const weight = e.target.weight.value;
     const height = e.target.height.value;
     const age = e.target.age.value;
     const blood = e.target.blood_group.value;
-    const rate = e.target.heart_rate.value;
-    const cancer = e.target.artery.checked;
-    console.log("cance>>>>", cancer)
+    const rate = e.target.heartrate.value;
+    // const date = e.target.date.value;
+    // const emergency = e.target.emergency.value;
+    // const address = e.target.address.value;
+    // const heart_rate = e.target.heartrate.value;
+    // const bloodPressure = e.target.bp.value;
+    
 
     if (rate === "") {
       setCount(1);
@@ -313,8 +314,8 @@ const Patientregistersteptwo = () => {
                             <label>Heart Rate</label>
                             <select
                               className="form-select form-control"
-                              id="heart_rate"
-                              name="heart_rate"
+                              id="heartrate"
+                              name="heartrate"
                               tabIndex={-1}
                               aria-hidden="true"
                             >
@@ -339,32 +340,7 @@ const Patientregistersteptwo = () => {
                               <option value={2}>2</option>
                             </select>
                           </div>
-                          <div className="form-group">
-                            <label>Glucose Level</label>
-                            <select
-                              className="form-select form-control"
-                              id="glucose"
-                              name="glucose"
-                              tabIndex={-1}
-                              aria-hidden="true"
-                            >
-                              <option value="">
-                                Select Your Glucose Level
-                              </option>
-                              <option value={1}>1</option>
-                              <option value={2}>2</option>
-                            </select>
-                          </div>
-                          <div className="form-group">
-                            <label>Allergies</label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              defaultValue="allergies"
-                              id="allergies"
-                              name="allergies"
-                            />
-                          </div>
+    
                           <div className="checklist-col pregnant-col">
                             <div className="remember-me-col d-flex justify-content-between">
                               <span className="mt-1">
@@ -376,7 +352,6 @@ const Patientregistersteptwo = () => {
 
                                   name="artery"
                                   id="artery"
-
 
                                 />
                                 <span className="checkmark" />
@@ -410,7 +385,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
@@ -426,7 +400,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
@@ -442,7 +415,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
@@ -458,7 +430,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
@@ -474,7 +445,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
@@ -490,7 +460,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
@@ -506,7 +475,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
@@ -522,7 +490,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
@@ -538,7 +505,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
@@ -554,7 +520,6 @@ const Patientregistersteptwo = () => {
                                   className=""
                                   name="medicine"
                                   id="medicine"
-                                  onClick="show_medicine()"
                                   defaultValue={1}
                                 />
                                 <span className="checkmark" />
