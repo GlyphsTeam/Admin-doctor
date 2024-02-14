@@ -8,7 +8,7 @@ import appointments from './Appointments/appointments';
 import setting from './Setting/setting';
 import auth from './Auth/auth';
 import register from './DoctorRegister/register'
-
+import patient from "./PatientRegister/patient";
 const store = configureStore({
   reducer: {
     profile: profile,
@@ -19,7 +19,8 @@ const store = configureStore({
     appointments: appointments,
     setting: setting,
     auth: auth,
-    register:register
+    register:register,
+    patient
   }
 });
 

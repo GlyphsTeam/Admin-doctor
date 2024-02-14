@@ -29,9 +29,9 @@ const Register = () => {
     if (confirmPassword === "") {
       showAlertMessage("The Confirm field is requried", "warning");
     }
-    if (passwordValidation(password)) {
-      showAlertMessage("The Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character", "warning")
-    }
+    // if (passwordValidation(password)) {
+    //   showAlertMessage("The Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character", "warning")
+    // }
     if (password === "") {
       showAlertMessage("The Password feild is requried", "warning");
     }
@@ -41,14 +41,16 @@ const Register = () => {
     if (email === "") {
       showAlertMessage("The Email feild is requried", "warning")
     }
-    // if (name === "") {
-    //   showAlertMessage("The Name field is requried", "warning");
-    // }
+    console.log(
+      "name>>>>",name
+    )
+    if (name === "") {
+      showAlertMessage("The Name field is requried", "warning");
+    }
     if (name &&
       email &&
       !emailValidation(email)
-      && password &&
-      !passwordValidation(password)) {
+      && password ) {
 
       let formData = new FormData();
       formData.append("name", name);
@@ -59,6 +61,7 @@ const Register = () => {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
+      e.target.reset();
 
     }
   }

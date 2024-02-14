@@ -11,7 +11,6 @@ const AppRouter = () => {
   // const config = "/react/template/";
   return (
     <Router basename={`${config.publicPath}`}>
-
     <Appcontext.Provider value={{ isAuth, setIsAuth }}>
         <Route render={(props) => <AppContainer {...props} />} />
       </Appcontext.Provider>

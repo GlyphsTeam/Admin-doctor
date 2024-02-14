@@ -17,6 +17,7 @@ import {
   doctor_thumb_10,
 } from "../imagepath";
 import { Link } from "react-router-dom";
+import ButtonOne from "../Buttons/ButtonOne";
 
 const Doctors = () => {
   const data = [
@@ -152,7 +153,7 @@ const Doctors = () => {
               id={`rating${record?.id}`}
               className="check"
               type="checkbox"
-              //  checked={false}
+            //  checked={false}
             />
             <label
               htmlFor={`rating${record?.id}`}
@@ -183,8 +184,10 @@ const Doctors = () => {
                   <li className="breadcrumb-item active">List of Doctors</li>
                 </ul>
               </div>
-
-             <Link to="/admin/doctor-register"><button className="add_doctor">Add a doctor</button></Link>
+              <ButtonOne route="/admin/doctor-register" >
+                Add a doctor
+              </ButtonOne>
+              {/* <Link to="/admin/doctor-register"><button className="add_doctor">Add a doctor</button></Link> */}
             </div>
           </div>
           {/* /Page Header */}
@@ -206,7 +209,7 @@ const Doctors = () => {
                       columns={columns}
                       dataSource={data}
                       rowKey={(record) => record.id}
-                      //  onChange={this.handleTableChange}
+                    //  onChange={this.handleTableChange}
                     />
                   </div>
                 </div>

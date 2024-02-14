@@ -5,13 +5,13 @@ import { emailValidation } from '../../../helper/helper';
 import Alert from '../Alert/Alert';
 
 const ForgotPassword = () => {
-  
+
   const [count, setCount] = useState(0);
   const [type, setType] = useState("");
   const [message, setMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
 
-  const showAlertMessage = (message, type) => { 
+  const showAlertMessage = (message, type) => {
     setCount(1);
     setMessage(message);
     setType(type);
@@ -24,14 +24,14 @@ const ForgotPassword = () => {
     const email = e.target.email.value;
 
 
-    if(emailValidation(email)){
+    if (emailValidation(email)) {
       showAlertMessage("The Email is not valid", "warning");
     }
     if (!email) {
       showAlertMessage("The Email feild is requried", "warning")
     }
-    
-    if(email){
+
+    if (email && !emailValidation(email)) {
       let formData = new FormData();
       formData.append("email", email);
       e.target.reset();
@@ -81,12 +81,12 @@ const ForgotPassword = () => {
         </div>
       </div>
       <Alert
-       count={count}
-       message={message}
-       setCount={setCount}
-       setShow={setShowAlert}
-       show={showAlert}
-       type={type}
+        count={count}
+        message={message}
+        setCount={setCount}
+        setShow={setShowAlert}
+        show={showAlert}
+        type={type}
       />
     </>
   );

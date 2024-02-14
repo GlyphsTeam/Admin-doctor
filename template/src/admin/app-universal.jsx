@@ -45,7 +45,13 @@ const InvoiceReportList = lazy(() => import("./components/Reports/InvoiceReport/
 const DoctorRegister = lazy(() => import("./components/doctor-register/index"));
 const Registerstepone = lazy(() => import("./components/doctor-register/registerstepone"));
 const Registersteptwo = lazy(() => import("./components/doctor-register/registersteptwo"));
-const AddSpecialities = lazy(()=>import("./components/AddSpecialities/Form"));
+const AddSpecialities = lazy(() => import("./components/AddSpecialities/Form"));
+const PatientRegister = lazy(() => import("./components/PatientRegister/PatientRegister"));
+const Patientregisterstepone = lazy(() => import("./components/registerPatient/patientregistersPatienttepone"));
+const Patientregistersteptwo = lazy(() => import("./components/registerPatient/patientregistersteptwo"));
+const Patientregisterstepthree = lazy(() => import("./components/registerPatient/patientregisterstepthree"));
+const Patientregisterstepfour = lazy(() => import("./components/registerPatient/patientregisterstepfour"));
+const Patientregisterstepfive = lazy(() => import("./components/registerPatient/patientregisterstepfive"));
 
 const AppUniversal = function (props) {
   const [menu, setMenu] = useState(false);
@@ -90,7 +96,7 @@ const AppUniversal = function (props) {
               path="/admin/forgotPassword"
               exact
               component={ForgotPassword}
-            
+
             />
             <Route path="/admin" exact component={Dashboard} />
             <Route
@@ -118,6 +124,37 @@ const AppUniversal = function (props) {
               component={AddSpecialities}
             />
             <Route
+              path="/admin/patient-register"
+              exact
+              component={PatientRegister}
+
+            />
+            <Route
+                path="/admin/patientregisterstep-1"
+                exact
+                component={Patientregisterstepone}
+              />
+              <Route
+                path="/admin/patientregisterstep-2"
+                exact
+                component={Patientregistersteptwo}
+              />
+              <Route
+                path="/admin/patientregisterstep-3"
+                exact
+                component={Patientregisterstepthree}
+              />
+              <Route
+                path="/admin/patientregisterstep-4"
+                exact
+                component={Patientregisterstepfour}
+              />
+              <Route
+                path="/admin/patientregisterstep-5"
+                exac
+                component={Patientregisterstepfive}
+              />
+            <Route
               path="/admin/doctor-register"
               exact
               component={DoctorRegister}
@@ -132,7 +169,7 @@ const AppUniversal = function (props) {
               exact
               component={Registersteptwo}
             />
-   
+
             <Route path="/admin/settings" exact component={Settings} />
             <Route path="/admin/invoicerepot" exact component={InvoiceReport} />
             <Route path="/admin/invoice" exact component={InvoiceReportList} />

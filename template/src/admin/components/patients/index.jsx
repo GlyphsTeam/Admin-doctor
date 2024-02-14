@@ -22,6 +22,7 @@ import {
   patient9,
 } from "../imagepath";
 import { Link } from "react-router-dom";
+import ButtonOne from "../Buttons/ButtonOne";
 
 const Patients = () => {
   const data = [
@@ -236,6 +237,9 @@ const Patients = () => {
                   <li className="breadcrumb-item active">List of Patient</li>
                 </ul>
               </div>
+              <ButtonOne route="/admin/patient-register">
+                Add a Patient
+              </ButtonOne>
             </div>
           </div>
           {/* /Page Header */}

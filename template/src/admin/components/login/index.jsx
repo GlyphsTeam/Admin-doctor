@@ -23,6 +23,8 @@ const Login = () => {
   const handlerLogin = (e) => {
     e.preventDefault();
 
+
+    
     if (!password) {
       showAlertMessage("The Password field is requried", "warning");
     }
