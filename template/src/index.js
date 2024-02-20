@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import AppRouter from "./approuter";
+import App from "./App.jsx";
 // import * as serviceWorker from './client/serviceWorker';
 import { Provider } from 'react-redux';
 
@@ -52,7 +52,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
     <Provider store={store}>
-      <AppRouter />
+      <App />
     </Provider>
 
   </>

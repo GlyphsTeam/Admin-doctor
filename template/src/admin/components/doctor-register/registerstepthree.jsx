@@ -5,7 +5,7 @@ import Logo from "../../assets/img/logo.png";
 // import male from '../../../assets/images/icons/male.png'
 // import female from '../../../assets/images/icons/female.png'
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Alert from '../Alert/Alert';
 import {
   setAddrees,
@@ -35,7 +35,7 @@ const Registerstepthree = () => {
   const [message, setMessage] = useState("");
   const registerState = useSelector((state) => state.register);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navgation = useNavigate();
   const showAlertMessage = (message, type) => {
     setCount(1);
     setMessage(message);
@@ -91,7 +91,7 @@ const Registerstepthree = () => {
       dispatch(setImage(null));
       dispatch(setName(""));
       dispatch(setCertfcation(null));
-      history.push("")
+      navgation.push("")
     }
 
   }

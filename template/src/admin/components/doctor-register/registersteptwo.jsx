@@ -21,13 +21,13 @@ import {
   setSpecialities,
 
 } from '../../../store/DoctorRegister/register';
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 
 const Registersteptwo = () => {
   const dispatch = useDispatch();
   const registerState = useSelector((state) => state.register);
-  const history = useHistory();
+  const navgation = useNavigate();
 
   useEffect(() => {
     document.body.classList.add("account-page");
@@ -118,7 +118,7 @@ const Registersteptwo = () => {
       dispatch(setImage(null));
       dispatch(setName(""));
       dispatch(setCertfcation(null));
-      history.push("/admin/register-step- 3");
+      navgation("/admin/register-step- 3");
     }
   }
   const handlerUpload = (e) => {

@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 // import loginBanner from '../../../assets/images/login-banner.png';
 import Logo from "../../assets/img/logo.png";
 import camera from "../../assets/icons/camera.svg";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setImage } from '../../../store/DoctorRegister/register';
 import { useDispatch, useSelector } from 'react-redux';
 import Alert from '../Alert/Alert';
 
 const Registerstepone = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navgation = useNavigate();
   const imageUrl = useSelector((state) => state.register);
   const [count, setCount] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
@@ -46,7 +46,7 @@ const Registerstepone = () => {
     }
 
     else {
-      history.push("/admin/register-step-2")
+      navgation("/admin/register-step-2");
     }
   }
   return (

@@ -6,7 +6,7 @@ import Logo from "../../assets/img/logo.png";
 // import female from '../../assets/images/icons/female.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocation, setState } from '../../../store/PatientRegister/patient';
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   setAge,
   setBloodType,
@@ -23,7 +23,7 @@ import Alert from "../Alert/Alert";
 const Patientregisterstepfive = () => 
 {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navgation = useNavigate();
   const registerState = useSelector((state) => state.register);
   const [type, setType] = useState("");
   const [message, setMessage] = useState("");
@@ -80,7 +80,7 @@ const Patientregisterstepfive = () =>
       dispatch(setPhoneRegister(""));
       dispatch(setNameRegister(""));
 
-      history.push("/patient/dashboard")
+      navgation("/patient/dashboard")
     }
   }
 

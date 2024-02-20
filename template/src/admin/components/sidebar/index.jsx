@@ -2,8 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars";
 // import FeatherIcon from "feather-icons-react";
-import { Appcontext } from "../../../approuter";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { useLocation } from "react-router-dom";
 
 const SidebarNav = () => {
   // let pathname = props?.location?.pathname;
@@ -11,7 +10,7 @@ const SidebarNav = () => {
   const location = useLocation();
   const pathname = location.pathname;
 
-  const { setIsAuth } = useContext(Appcontext);
+  // const { setIsAuth } = useContext(Appcontext);
   const [isSideMenu, setSideMenu] = useState("");
   const [isSideMenuNew, setSideMenuNew] = useState("");
   const [isSideMenuNew2, setSideMenuNew2] = useState("");
@@ -55,7 +54,7 @@ const SidebarNav = () => {
     <>
       {/* <!-- Sidebar --> */}
       <div
-        className={`sidebar ${isSidebarExpanded ? "" : "hidden"}`}
+        className={`sidebar`}
         id="sidebar"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -165,7 +164,7 @@ const SidebarNav = () => {
                       <Link
                         to="/admin/login"
                         className={pathname?.includes("login") ? "active" : ""}
-                        onClick={() => setIsAuth("admin")}
+                        // onClick={() => setIsAuth("admin")}
                       >
                         {" "}
                         Login{" "}
@@ -177,7 +176,7 @@ const SidebarNav = () => {
                         className={
                           pathname?.includes("register") ? "active" : ""
                         }
-                        onClick={() => setIsAuth("admin")}
+                        // onClick={() => setIsAuth("admin")}
                       >
                         {" "}
                         Register{" "}
@@ -189,7 +188,7 @@ const SidebarNav = () => {
                         className={
                           pathname?.includes("forgotpassword") ? "active" : ""
                         }
-                        onClick={() => setIsAuth("admin")}
+                        // onClick={() => setIsAuth("admin")}
                       >
                         {" "}
                         Forgot Password{" "}
@@ -220,7 +219,7 @@ const SidebarNav = () => {
                       <Link
                         to="/admin/404"
                         className={pathname?.includes("404") ? "active" : ""}
-                        onClick={() => setIsAuth("admin")}
+                        // onClick={() => setIsAuth("admin")}
                       >
                         404 Error{" "}
                       </Link>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 // import { useHistory } from "react-router-dom";
 import loginBanner from "../../assets/img/login-banner.png";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setName, setPassword, setPhone } from '../../../store/DoctorRegister/register';
 import Header from "../header/index";
 import { useDispatch } from 'react-redux'
@@ -14,7 +14,7 @@ const DoctorRegister = (props) => {
   const phoneNumber = useRef(null);
   const password = useRef(null);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navgation = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
   const [type, setType] = useState("");
@@ -22,7 +22,7 @@ const DoctorRegister = (props) => {
 
 
 
-  // const history = useHistory();
+  // const navgation = useHistory();
   useEffect(() => {
     document.getElementsByTagName("body")[0].className = "account-page";
 
@@ -57,7 +57,7 @@ const DoctorRegister = (props) => {
       dispatch(setName(nameValue));
       dispatch(setPassword(passwordValue));
       dispatch(setPhone(phoneValue));
-      history.push("/admin/registerstepone")
+      navgation("/admin/registerstepone")
     }
 
 

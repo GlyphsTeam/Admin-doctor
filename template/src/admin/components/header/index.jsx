@@ -42,7 +42,7 @@ const Header = (props) => {
     document.body.classList.toggle("slide-nav");
   };
 
-  if (props.location.pathname.split("/")[1] === "admin") {
+  if (props.location?.pathname?.split("/")[1] === "admin") {
     require("../../assets/css/feathericon.min.css");
     require("../../assets/js/feather.min.js");
     require("../../assets/plugins/fontawesome/css/fontawesome.min.css");
@@ -53,7 +53,7 @@ const Header = (props) => {
   }
 
   const exclusionArray = ["/admin/login"];
-  if (exclusionArray.indexOf(props.location.pathname) >= 0) {
+  if (exclusionArray.indexOf(props.location?.pathname) >= 0) {
     return "";
   }
 
