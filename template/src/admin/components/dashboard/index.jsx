@@ -26,6 +26,7 @@ const Dashboard = () => {
       color: "danger"
     }
   ]
+
   return (
     <>
       <div className="main-wrapper">

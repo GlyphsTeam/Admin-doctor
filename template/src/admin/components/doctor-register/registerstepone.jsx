@@ -37,7 +37,9 @@ const Registerstepone = () => {
       dispatch(setImage(image));
     }
   }
-  const hanlderNextRegister = () => {
+  const hanlderNextRegister = (e) => {
+    e.preventDefault();
+
     if (!imageUrl.img.type.startsWith('image/')) {
       setCount(1);
       setShowAlert(true);
@@ -78,7 +80,7 @@ const Registerstepone = () => {
                         </li>
                       </ul>
                     </div>
-                    <form id="profile_pic_form" >
+                    <form onSubmit={hanlderNextRegister} >
                       <div className="profile-pic-col">
                         <h3>Profile Picture</h3>
                         <div className="profile-pic-upload">
@@ -102,7 +104,6 @@ const Registerstepone = () => {
 
                       <div className="mt-5">
                         <button
-                          onClick={() => hanlderNextRegister()}
                           className="btn btn-primary w-100 btn-lg login-btn step1_submit"
                         >
                           continue{" "}

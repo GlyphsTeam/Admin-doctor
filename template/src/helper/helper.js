@@ -19,3 +19,4 @@ export function passwordValidation(password) {
 
     return !isValidPassword;
 }
+

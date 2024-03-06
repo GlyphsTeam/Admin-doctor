@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars";
 // import FeatherIcon from "feather-icons-react";
@@ -86,6 +86,18 @@ const SidebarNav = () => {
                   <Link to="/admin/edithome">
                     <i className="fe fe-home"></i>
                     <span>Edit Home</span>
+                  </Link>
+                </li>
+                <li className={pathname === "/admin/welcome" ? "active" : ""}>
+                  <Link to="/admin/welcome">
+                    <i className="fe fe-home"></i>
+                    <span>Welcome Screen</span>
+                  </Link>
+                </li>
+                <li className={pathname === "/admin/slider" ? "active" : ""}>
+                  <Link to="/admin/slider ">
+                    <i className="fe fe-home"></i>
+                    <span>Slider</span>
                   </Link>
                 </li>
                 <li
@@ -228,7 +240,6 @@ const SidebarNav = () => {
                       <Link
                         to="/admin/500"
                         className={pathname?.includes("500") ? "active" : ""}
-                        onClick={() => setIsAuth("admin")}
                       >
                         500 Error{" "}
                       </Link>

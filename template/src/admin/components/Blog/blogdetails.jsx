@@ -6,7 +6,7 @@ import {
   avatar06,
   avatar07,
   avatar08,
-  // avatar09,
+  avatar09,
   avatar10,
   blog01,
   replyIcon,

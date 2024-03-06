@@ -1,13 +1,14 @@
 /* eslint-disable react/prop-types */
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import config from "config";
-
-import { Route, BrowserRouter, Routes } from "react-router-dom";
+import { setAuth } from '../store/Auth/auth';
+import { useDispatch, useSelector } from 'react-redux'
+import { Route, BrowserRouter, Routes, Navigate } from "react-router-dom";
 import Loading from './components/Loading/Loading';
-// import { Appcontext } from "../approuter";
-// const Header = lazy(() => import("./components/header/index"));
 const Dashboard = lazy(() => import("./components/dashboard"));
 const EditHome = lazy(() => import("./components/editHome/index"));
+const Welcome = lazy(() => import("./components/welcomeScreen/Welcome"));
+const Sliders = lazy(() => import("./components/sliders/Silder"));
 const Appointments = lazy(() => import("./components/appointments"));
 const Specialities = lazy(() => import("./components/specialities"));
 const Doctors = lazy(() => import("./components/doctors"));
@@ -52,32 +53,38 @@ const Patientregistersteptwo = lazy(() => import("./components/registerPatient/p
 const Patientregisterstepthree = lazy(() => import("./components/registerPatient/patientregisterstepthree"));
 const Patientregisterstepfour = lazy(() => import("./components/registerPatient/patientregisterstepfour"));
 const Patientregisterstepfive = lazy(() => import("./components/registerPatient/patientregisterstepfive"));
-
 const Header = lazy(() => import("./components/header/index"));
+const AddWelcome = lazy(() => import("./components/welcomeScreen/AddWelcome"))
+const EditWelcome = lazy(() => import("./components/welcomeScreen/EditWelcome"));
+const AddSlider = lazy(() => import("./components/sliders/AddSliders"))
 
 
 
 const AppRouters = function () {
-    // const [menu, setMenu] = useState(false);
-    // const toggleMobileMenu = () => {
-    //     setMenu(!menu);
-    // };
-    // const { isAuth, setIsAuth } = useContext(Appcontext);
+    let backendUrl = "arab-texas.com/api";
+    const dispatch = useDispatch();
+    const authState = useSelector((state) => state.auth);
 
+    useEffect(() => {
+        if (localStorage.getItem("access_token")) {
+            dispatch(setAuth(true))
+        }
+    }, []);
+    
+    console.log("authState><", authState)
     return (
         <Suspense fallback={<Loading />}>
             <BrowserRouter basename={`${config.publicPath}`}>
                 <div >
-                    {/* {isAuth !== "admin" && (
-                        <Route
-                            render={(props) => (
-                                <Header {...props} onMenuClick={() => toggleMobileMenu()} />
-                            )}
-                        />
-                    )} */}
-                    <Header/>
+                    {authState.isAuth ? < Header /> : <></>}
                     <Routes>
-                        <Route path="/admin/login" exact element={<Login />} />
+                        <Route path="/admin/login" exact element={!authState.isAuth ?
+                            (
+                                <Login backendUrl={backendUrl} />
+                            ) :
+                            (
+                                <Dashboard />
+                            )} />
                         <Route path="/admin/register" exact element={<Register />} />
                         <Route
                             path="/admin/forgotPassword"
@@ -85,40 +92,138 @@ const AppRouters = function () {
                             element={<ForgotPassword />}
 
                         />
-                        <Route path="/admin" exact element={<Dashboard />} />
+                        <Route path="/admin" exact element={
+                            authState.isAuth ?
+                                (
+                                    <Dashboard />
+                                ) : (
+                                    <Navigate to="/admin/login" />
+                                )} />
                         <Route
                             path="/admin/appointment-list"
                             exact
-                            element={<Appointments />}
+                            element={authState.isAuth ? (
+                                <Appointments />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )}
                         />
                         <Route
                             path="/admin/edithome"
                             exact
-                            element={<EditHome />}
+                            element={authState.isAuth ? (
+                                <EditHome />
+                            ) : (
+                                <Navigate to='/admin/login' />
+                            )}
                         />
                         <Route
-                          path="/*"
-                          exact 
-                          element={<Error/>}
+                            path="/admin/welcome"
+                            exact
+                            element={authState.isAuth ? (
+                                <Welcome backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to='/admin/login' />
+                            )}
                         />
-                        <Route path="/admin/specialities" exact element={<Specialities />} />
-                        <Route path="/admin/doctor-list" exact element={<Doctors />} />
-                        <Route path="/admin/patient-list" exact element={<Patients />} />
-                        <Route path="/admin/reviews" exact element={<Reviews />} />
+                        <Route
+                            path="/admin/slider"
+                            exact
+                            element={authState.isAuth ? (
+                                <Sliders backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to='/admin/login' />
+                            )}
+                        />
+                        <Route
+                            path="/*"
+                            exact
+                            element={<Error />}
+                        />
+                        <Route path="/admin/specialities" exact element={
+                            authState.isAuth ? (
+                                <Specialities />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )
+                        } />
+                        <Route path="/admin/doctor-list" exact element={
+                            authState.isAuth ? (
+                                <Doctors />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )
+                        } />
+                        <Route path="/admin/patient-list" exact element={authState.isAuth ? (
+                            <Patients />
+                        ) : (
+                            <Navigate to="/admin/login" />
+                        )} />
+                        <Route path="/admin/reviews" exact element={
+                            authState.isAuth ? (
+                                <Reviews />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )} />
                         <Route
                             path="/admin/transactions-list"
                             exact
-                            element={<Transaction />}
+                            element={authState.isAuth ? (
+                                <Transaction />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )
+                            }
                         />
                         <Route
                             path="/admin/add-specialities"
                             exact
-                            element={<AddSpecialities />}
+                            element={authState.isAuth ? (
+                                <AddSpecialities />
+                            ) : (
+                                <Navigate to='/admin/login' />
+                            )
+                            }
+                        />
+                        <Route
+                            path="/admin/add-welcome"
+                            exact
+                            element={authState.isAuth ? (
+                                <AddWelcome backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to='/admin/login' />
+                            )
+                            }
+                        />
+                        <Route
+                            path="/admin/add-slider"
+                            exact
+                            element={authState.isAuth ? (
+                                <AddSlider backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to='/admin/login' />
+                            )
+                            }
+                        />
+                        <Route
+                            path="/admin/edit-welcome/:id"
+                            exact
+                            element={authState.isAuth ? (
+                                <EditWelcome backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to='/admin/login' />
+                            )
+                            }
                         />
                         <Route
                             path="/admin/patient-register"
                             exact
-                            element={<PatientRegister />}
+                            element={authState.isAuth ? (
+                                <PatientRegister />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )
+                            }
 
                         />
                         <Route
@@ -162,15 +267,55 @@ const AppRouters = function () {
                             element={<Registersteptwo />}
                         />
 
-                        <Route path="/admin/settings" exact element={<Settings />} />
-                        <Route path="/admin/invoicerepot" exact element={<InvoiceReport />} />
-                        <Route path="/admin/invoice" exact element={<InvoiceReportList />} />
-                        <Route path="/admin/blog" exact element={<Blog />} />
-                        <Route path="/admin/blog-details" exact element={<BlogDetails />} />
-                        <Route path="/admin/add-blog" exact element={<AddBlog />} />
-                        <Route path="/admin/edit-blog" exact element={<EditBlog />} />
+                        <Route path="/admin/settings" exact element={
+                            authState.isAuth ? (
+                                <Settings />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )} />
+                        <Route path="/admin/invoicerepot" exact element={
+                            authState.isAuth ? (
+                                <InvoiceReport />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )
+                        } />
+                        <Route path="/admin/invoice" exact element={
+                            authState.isAuth ? (
+                                <InvoiceReportList />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )} />
+                        <Route path="/admin/blog" exact element={
+                            authState.isAuth ? (
+                                <Blog />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )} />
+                        <Route path="/admin/blog-details" exact element={
+                            authState.isAuth ? (
+                                <BlogDetails />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )} />
+                        <Route path="/admin/add-blog" exact element={authState.isAuth ? (
+                            <AddBlog />
+                        ) : (
+                            <Navigate to="/admin/login" />
+                        )} />
+                        <Route path="/admin/edit-blog" exact element={
+                            authState.isAuth ? (
+                                <EditBlog />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )
+                        } />
                         <Route path="/admin/pending-blog" exact element={<PendingBlog />} />
-                        <Route path="/admin/profile" exact element={<Profile />} />
+                        <Route path="/admin/profile" exact element={authState.isAuth ? (
+                            <Profile />
+                        ) : (
+                            <Navigate to="/admin/login" />
+                        )} />
                         <Route path="/admin/product-list" exact element={<ProductList />} />
                         <Route path="/admin/pharmacy-list" exact element={<PharmacyList />} />
                         <Route path="/admin/pharmacy-category" exact element={<Categories />} />

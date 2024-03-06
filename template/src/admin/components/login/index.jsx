@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { logoWhite } from "../imagepath";
 import { emailValidation } from "../../../helper/helper";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Alert from "../Alert/Alert";
-const Login = () => {
-
+import axios from "axios";
+import { setAuth } from '../../../store/Auth/auth';
+import { useDispatch } from 'react-redux'
+// eslint-disable-next-line react/prop-types
+const Login = ({ backendUrl }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  console.log("backendUrl>>>", backendUrl)
 
   const [count, setCount] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
@@ -20,11 +27,9 @@ const Login = () => {
     setType(type);
   };
 
-  const handlerLogin = (e) => {
+  const handlerLogin = async (e) => {
     e.preventDefault();
 
-
-    
     if (!password) {
       showAlertMessage("The Password field is requried", "warning");
     }
@@ -41,23 +46,32 @@ const Login = () => {
 
       formData.append("email", email);
       formData.append("password", password);
+      formData.append("guard", "admin");
 
-      setEmail("");
-      setPassword("");
 
-      e.target.reset();
-      // emailRef.current = "";
-      // passwordRef.current = "";
+
+
+      await axios.post(`https://arab-texas.com/api/login`, formData, {
+        headers: {
+          "Accept": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type":"multipart/form-data; boundary=<calculated when request is sent>"
+        }
+      }).then((res) => {
+        dispatch(setAuth(true));
+        setEmail("");
+        setPassword("");
+        localStorage.setItem("access_token", res.data?.data?.token)
+        navigate("/admin");
+
+        e.target.reset();
+      }).catch((err) => {
+        console.log(err)
+      });
+
     }
   }
-  // const [shouldReload, setShouldReload] = useState(true);
 
-  // useEffect(() => {
-  //   if (shouldReload) {
-  //     window.location.reload();
-  //     setShouldReload(false);
-  //   }
-  // }, [shouldReload]);
   return (
     <>
       <div className="main-wrapper login-body">
@@ -77,7 +91,7 @@ const Login = () => {
                       <input
                         onChange={(e) => setEmail(e.target.value)}
                         className="form-control"
-                        type="text"
+                        type="email"
                         placeholder="Email"
                       />
                     </div>
@@ -85,7 +99,7 @@ const Login = () => {
                       <input
                         onChange={(e) => setPassword(e.target.value)}
                         className="form-control"
-                        type="text"
+                        type="password"
                         placeholder="Password"
                       />
                     </div>

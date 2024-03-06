@@ -4,6 +4,9 @@
 // Admin-dashboard
 const path = require("path");
 const webpack = require("webpack");
+const Dotenv = require('dotenv-webpack');
+const dotenv = require('dotenv')
+dotenv.config();
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -19,12 +22,16 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
   },
   devServer: {
-    port: 3003,
+    port: 3000,
     historyApiFallback: true,
     onAfterSetupMiddleware() {
-      opn(`http://localhost:${this.port}/admin`);
+      opn(`http://localhost:${this.port}/react/template/admin`);
     },
   },
+  plugins: [
+    new Dotenv(),
+  ],
+  
   // devServer: {
   //   static: {
   //     directory: path.join(__dirname, "public/"),
@@ -114,6 +121,12 @@ module.exports = {
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env)
+   }),
     new webpack.HotModuleReplacementPlugin(),
 
     new HtmlWebpackPlugin({
@@ -135,6 +148,9 @@ module.exports = {
         "images/*.*",
       ],
     }),
+  ],
+  plugins: [
+    new Dotenv(),
   ],
   plugins: [
     new webpack.DefinePlugin({
