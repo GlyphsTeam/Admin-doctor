@@ -56,6 +56,7 @@ const Patientregisterstepfive = lazy(() => import("./components/registerPatient/
 const Header = lazy(() => import("./components/header/index"));
 const AddWelcome = lazy(() => import("./components/welcomeScreen/AddWelcome"))
 const EditWelcome = lazy(() => import("./components/welcomeScreen/EditWelcome"));
+const EditSlider = lazy(() => import("./components/sliders/EditSlider"));
 const AddSlider = lazy(() => import("./components/sliders/AddSliders"))
 
 
@@ -70,8 +71,7 @@ const AppRouters = function () {
             dispatch(setAuth(true))
         }
     }, []);
-    
-    console.log("authState><", authState)
+
     return (
         <Suspense fallback={<Loading />}>
             <BrowserRouter basename={`${config.publicPath}`}>
@@ -210,6 +210,16 @@ const AppRouters = function () {
                             exact
                             element={authState.isAuth ? (
                                 <EditWelcome backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to='/admin/login' />
+                            )
+                            }
+                        />
+                        <Route
+                            path="/admin/edit-slider/:id"
+                            exact
+                            element={authState.isAuth ? (
+                                <EditSlider backendUrl={backendUrl} />
                             ) : (
                                 <Navigate to='/admin/login' />
                             )

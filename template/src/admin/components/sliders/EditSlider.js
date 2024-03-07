@@ -1,21 +1,51 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SidebarNav from "../sidebar";
+import FeatherIcon from "feather-icons-react";
 import Alert from "../Alert/Alert";
 import Camera from '../../assets/icons/camera.svg'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+
 const Form = ({ backendUrl }) => {
+    const { id } = useParams();
     const [count, setCount] = useState(0);
     const [type, setType] = useState("");
+    const [typeSlider, setTypeSlider] = useState("");
     const [message, setMessage] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [image, setImage] = useState(null);
+    const [changeImage, setChangeImage] = useState(null);
+    const [titleAr, setTitleAr] = useState("");
+    const [titleEn, setTitlteEn] = useState("");
+    const [descriptionAr, setDiscroptionAr] = useState("");
+    const [descriptionEn, setDiscriptionEn] = useState("");
+    const token = localStorage.getItem("access_token");
     const navigation = useNavigate();
 
+    const handlerGetEdit = async (id) => {
+        await axios.get(`https://${backendUrl}/admin/sliders/${id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
 
+        }).then((res) => {
+            console.log("res>>", res.data)
+            setTitleAr(res.data?.data.title_ar);
+            setTitlteEn(res.data?.data.title_en);
+            setDiscriptionEn(res.data?.data?.description_en);
+            setDiscroptionAr(res.data?.data?.description_ar);
+            setImage(res.data?.data?.image);
+            setTypeSlider(res.data?.data?.type);
 
+        }).catch((err) => console.log(err))
+    }
+    useEffect(() => {
+        if (id) {
+            handlerGetEdit(id)
+        }
+    }, [id])
     const showAlertMessage = (message, type) => {
         setCount(1);
         setType(type);
@@ -31,7 +61,8 @@ const Form = ({ backendUrl }) => {
             showAlertMessage("The Image must be jpeg or png or jpg", "warning");
         }
         else {
-            setImage(image);
+            setChangeImage(image)
+            setImage(URL.createObjectURL(image));
         }
     }
 
@@ -42,16 +73,11 @@ const Form = ({ backendUrl }) => {
         const titleAr = e.target.titleAr.value;
         const descriptionAr = e.target.descriptionAr.value;
         const descriptionEn = e.target.descriptionEn.value;
-        const token = localStorage.getItem("access_token");
-        const typeSlider = e.target.type.value;
-        console.log("type>>>",typeSlider)
 
-        if (!typeSlider) {
-            showAlertMessage("The Type  field is required", "warning")
-        }
         if (!image) {
             showAlertMessage("The Image field is requried", "warning");
         }
+
         if (!descriptionEn) {
             showAlertMessage("The Description in English is required", "warning");
         }
@@ -68,31 +94,32 @@ const Form = ({ backendUrl }) => {
             titleAr &&
             image &&
             descriptionAr &&
-            descriptionEn &&
-            typeSlider) {
-            let formData = new FormData();
+            descriptionEn) {
+            if (id) {
+                let formData = new FormData();
 
-            formData.append("type", typeSlider);
-            formData.append("title[en]", titleEn);
-            formData.append("title[ar]", titleAr);
-            formData.append("description[en]", descriptionEn);
-            formData.append("description[ar]", descriptionAr);
-            formData.append("image", image);
+                formData.append("title[en]", titleEn);
+                formData.append("title[ar]", titleAr);
+                formData.append("description[en]", descriptionEn);
+                formData.append("description[ar]", descriptionAr);
+                formData.append("type", typeSlider)
+                changeImage&& formData.append("image", changeImage)
 
-            await axios.post(`https://${backendUrl}/admin/sliders`, formData, {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            }).then(() => {
-                setImage(null);
-                e.target.reset();
-                navigation("/admin/slider")
+                await axios.post(`https://${backendUrl}/admin/sliders/${id}`, formData, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                }).then(() => {
+                    setImage(null);
+                    e.target.reset();
+                    navigation("/admin/slider")
 
-            }).catch((err) => {
-                console.log(err);
-                showAlertMessage("There is a problem in the server", "warning");
+                }).catch((err) => {
+                    console.log(err);
+                    showAlertMessage("There is a problem in the server", "warning");
 
-            })
+                })
+            }
 
         }
 
@@ -109,7 +136,7 @@ const Form = ({ backendUrl }) => {
                     {/* Add Blog */}
                     <div className="row">
                         <div className="col-md-12">
-                            <h5 className="mb-3">Add a New Silder</h5>
+                            <h5 className="mb-3">Edit Welcome</h5>
                             <div className="row">
                                 <div className="col-md-6">
                                     <form onSubmit={handlerAddSpecialities}>
@@ -118,7 +145,7 @@ const Form = ({ backendUrl }) => {
                                                 <label className="focus-label">
                                                     Title Arabic <span className="text-danger">*</span>
                                                 </label>
-                                                <input type="text" className="form-control floating" name="titleAr" />
+                                                <input type="text" className="form-control floating" name="titleAr" defaultValue={titleAr} />
                                             </div>
                                         </div>
                                         <div className="form-group form-focus">
@@ -126,15 +153,15 @@ const Form = ({ backendUrl }) => {
                                                 <label className="focus-label">
                                                     Title English <span className="text-danger">*</span>
                                                 </label>
-                                                <input type="text" className="form-control floating" name="titleEn" />
+                                                <input type="text" className="form-control floating" name="titleEn" defaultValue={titleEn} />
                                             </div>
                                         </div>
                                         <div className="form-group form-focus">
                                             <div className="input-placeholder passcode-wrap mail-box">
-                                                <label className="focus-label">
+                                                <label className="focus-label fs-10" >
                                                     description Arabic <span className="text-danger">*</span>
                                                 </label>
-                                                <input type="text" className="form-control floating" name="descriptionAr" />
+                                                <input type="text" className="form-control floating" name="descriptionAr" defaultValue={descriptionAr} />
                                             </div>
                                         </div>
                                         <div className="form-group form-focus">
@@ -142,23 +169,12 @@ const Form = ({ backendUrl }) => {
                                                 <label className="focus-label">
                                                     description English <span className="text-danger">*</span>
                                                 </label>
-                                                <input type="text" className="form-control floating" name="descriptionEn" />
-                                            </div>
-                                        </div>
-                                        <div className="form-group row">
-                                            <label className="col-lg-3 col-form-label">
-                                                Type
-                                            </label>
-                                            <div className="col-lg-9">
-                                                <select className="form-select" name="type">
-                                                    <option value={"app"}>App</option>
-                                                    <option value={"web"}>Web</option>
-                                                </select>
+                                                <input type="text" className="form-control floating" name="descriptionEn" defaultValue={descriptionEn} />
                                             </div>
                                         </div>
                                         <div className="profile-pic-upload d-flex flex-wrap justify-content-center">
                                             <div className="cam-col">
-                                                <img src={image ? URL.createObjectURL(image) : Camera} alt="camera" />
+                                                <img src={image ? image : Camera} alt="camera" />
                                             </div>
                                             <input
                                                 type="file"

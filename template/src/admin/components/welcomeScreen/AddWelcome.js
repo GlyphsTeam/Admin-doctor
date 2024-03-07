@@ -2,16 +2,17 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import SidebarNav from "../sidebar";
-import FeatherIcon from "feather-icons-react";
 import Alert from "../Alert/Alert";
 import Camera from '../../assets/icons/camera.svg'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const Form = ({ backendUrl }) => {
     const [count, setCount] = useState(0);
     const [type, setType] = useState("");
     const [message, setMessage] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [image, setImage] = useState(null);
+    const navigation = useNavigate();
 
 
 
@@ -80,6 +81,7 @@ const Form = ({ backendUrl }) => {
             }).then(() => {
                 setImage(null);
                 e.target.reset();
+                navigation("/admin/welcome")
 
             }).catch((err) => {
                 console.log(err);

@@ -39,7 +39,6 @@ const Welcome = ({ backendUrl }) => {
 
     getWelcome();
   }, []);
-  console.log("welcome>>", welcome[1]?.description_en)
 
 
   const columns = [
@@ -48,7 +47,7 @@ const Welcome = ({ backendUrl }) => {
       dataIndex: "welcome",
       render: (text, record) => (
         <>
-          <Link className="avatar mx-2" to="/admin/profile">
+          <Link className="avatar mx-2" to="/admin/profile" key={record.id}>
             <img src={record.image} />
           </Link>
           <Link to="/admin/profile">{text}</Link>
@@ -58,11 +57,11 @@ const Welcome = ({ backendUrl }) => {
     },
     {
 
-      title: "Action",
+      title: "Action",                                                                                                             
       className: "text-end",
       dataIndex: "",
       render: (text, record) => (
-        <div className="text-end">
+        <div className="text-end" key={record.id}>
           <Link
             to={`/admin/edit-welcome/${record.id}`}
             className="me-1 btn btn-sm bg-success-light "

@@ -13,7 +13,8 @@ import axios from 'axios';
 const Sliders = ({ backendUrl }) => {
   const [sliders, setSliders] = useState(null);
   const token = localStorage.getItem("access_token");
-
+  
+  console.log("sliders>>",sliders)
   const deleteWelcome = async (id) => {
     await axios.delete(`https://${backendUrl}/admin/sliders/${id}`, {
       headers: {
@@ -57,6 +58,15 @@ const Sliders = ({ backendUrl }) => {
       sorter: (a, b) => a.record.length - b.record.length,
     },
     {
+      title: "type",
+      dataIndex: "type",
+      render: (text, record) => (
+        <>
+          <p>{record?.type}</p>
+        </>
+      ),
+    },
+    {
 
       title: "Action",
       className: "text-end",
@@ -64,7 +74,7 @@ const Sliders = ({ backendUrl }) => {
       render: (text, record) => (
         <div className="text-end">
           <Link
-            to={`/admin/edit-welcome/${record.id}`}
+            to={`/admin/edit-slider/${record.id}`}
             className="me-1 btn btn-sm bg-success-light "
             data-bs-toggle="modal"
             data-bs-target="#edit_specialities_details"

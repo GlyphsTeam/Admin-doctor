@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import SidebarNav from "../sidebar";
-import FeatherIcon from "feather-icons-react";
 import Alert from "../Alert/Alert";
 import Camera from '../../assets/icons/camera.svg'
 import axios from 'axios';
@@ -15,6 +14,7 @@ const Form = ({ backendUrl }) => {
     const [message, setMessage] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [image, setImage] = useState(null);
+    const [imageChange, setImageChange] = useState(null);
     const [titleAr, setTitleAr] = useState("");
     const [titleEn, setTitlteEn] = useState("");
     const [descriptionAr, setDiscroptionAr] = useState("");
@@ -28,7 +28,6 @@ const Form = ({ backendUrl }) => {
             }
 
         }).then((res) => {
-            console.log("res>>", res.data?.data)
             setTitleAr(res.data?.data.title_ar);
             setTitlteEn(res.data?.data.title_en);
             setDiscriptionEn(res.data?.data?.description_en);
@@ -57,7 +56,8 @@ const Form = ({ backendUrl }) => {
             showAlertMessage("The Image must be jpeg or png or jpg", "warning");
         }
         else {
-            setImage(image);
+            setImageChange(image)
+            setImage(URL.createObjectURL(image));
         }
     }
 
@@ -97,13 +97,14 @@ const Form = ({ backendUrl }) => {
                 formData.append("title[ar]", titleAr);
                 formData.append("description[en]", descriptionEn);
                 formData.append("description[ar]", descriptionAr);
-                formData.append("image", image);
 
-                await axios.put(`https://${backendUrl}/admin/welcome_screens/${id}`, formData, {
+                imageChange && formData.append("image", imageChange);
+
+                await axios.post(`https://${backendUrl}/admin/welcome_screens/${id}`, formData, {
                     headers: {
-                        "Authorization": `Bearer ${token}`
+                        "Authorization": `Bearer ${token}`,
                     }
-                }).then(() => {
+                }).then((res) => {
                     setImage(null);
                     e.target.reset();
 
@@ -132,7 +133,7 @@ const Form = ({ backendUrl }) => {
                             <h5 className="mb-3">Edit Welcome</h5>
                             <div className="row">
                                 <div className="col-md-6">
-                                    <form onSubmit={handlerAddSpecialities}>
+                                    <form onSubmit={handlerAddSpecialities} encType="multipart/form-data">
                                         <div className="form-group form-focus">
                                             <div className="input-placeholder passcode-wrap mail-box">
                                                 <label className="focus-label">
