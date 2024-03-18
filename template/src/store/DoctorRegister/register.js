@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     name: "",
+    email:"",
     password: "",
     phone: "",
     img: null,
@@ -42,7 +43,9 @@ const registerSlice = createSlice({
         setAddrees: (state, actions) => {
             state.address = actions.payload
         },
-
+        setEmail:(state, actions)=>{
+          state.email = actions.payload;  
+        },
         setCertfcation: (state, actions) => {
             state.certifcate = actions.payload
         },
@@ -83,6 +86,7 @@ export const {
     setDate,
     setDoctorID,
     setNationality,
+    setEmail,
     setSpecialities
 } = registerSlice.actions;
 

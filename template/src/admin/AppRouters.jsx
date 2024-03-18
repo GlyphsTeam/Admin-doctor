@@ -149,7 +149,7 @@ const AppRouters = function () {
                         } />
                         <Route path="/admin/doctor-list" exact element={
                             authState.isAuth ? (
-                                <Doctors />
+                                <Doctors backendUrl={backendUrl}/>
                             ) : (
                                 <Navigate to="/admin/login" />
                             )
@@ -274,7 +274,7 @@ const AppRouters = function () {
                         <Route
                             path="/admin/register-step-2"
                             exact
-                            element={<Registersteptwo />}
+                            element={<Registersteptwo backendUrl={backendUrl}/>}
                         />
 
                         <Route path="/admin/settings" exact element={

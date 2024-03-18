@@ -1,9 +1,13 @@
-import React from "react";
+/* eslint-disable react/prop-types */
+import React, { useEffect } from "react";
 import { Table } from "antd";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { itemRender, onShowSizeChange } from "../paginationfunction";
 import SidebarNav from "../sidebar";
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
   doctor_thumb_01,
   doctor_thumb_02,
@@ -18,8 +22,11 @@ import {
 } from "../imagepath";
 import { Link } from "react-router-dom";
 import ButtonOne from "../Buttons/ButtonOne";
-
-const Doctors = () => {
+import { setDoctors } from '../../../store/Doctors/doctors';
+const Doctors = ({ backendUrl }) => {
+  const token = localStorage.getItem("access_token");
+  const dispatch = useDispatch();
+  const doctoers = useSelector(state => state.doctors);
   const data = [
     {
       id: 1,
@@ -112,6 +119,25 @@ const Doctors = () => {
       AccountStatus: "checkbox",
     },
   ];
+  const getDoctors = async () => {
+    await axios.get(`https://${backendUrl}/admin/doctors`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    }).then((res) => {
+      dispatch(setDoctors(res.data.data));
+
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
+  useEffect(() => {
+    if (doctoers.doctors == null) {
+      getDoctors();
+    }
+  }, [])
+  console.log("doctoers>>", doctoers)
+
   const columns = [
     {
       title: "Doctor Name",
@@ -119,9 +145,9 @@ const Doctors = () => {
       render: (text, record) => (
         <>
           <Link className="avatar mx-2" to="/admin/profile">
-            <img className="rounded-circle" src={record.image} />
+            <img className="rounded-circle" src={record?.image} alt="imageProfile" />
           </Link>
-          <Link to="/admin/profile">{text}</Link>
+          <Link to="/admin/profile">{record?.name}</Link>
         </>
       ),
       sorter: (a, b) => a.DoctorName.length - b.DoctorName.length,
@@ -129,19 +155,27 @@ const Doctors = () => {
     {
       title: "Speciality",
       dataIndex: "Speciality",
-      sorter: (a, b) => a.Speciality.length - b.Speciality.length,
-    },
-    {
-      title: "Member Since",
-      render: (record) => (
+      render: (text, record) => (
         <>
-          <span className="user-name">{record.Date}</span>
-          <br />
-          <span>{record.time}</span>
+         {
+          record?.specialties?.map((item)=>{
+            return <li key={item?.id}>{item?.name}</li>
+          })
+         }
         </>
-      ),
-      sorter: (a, b) => a.length - b.length,
+      )
     },
+    // {
+    //   title: "Member Since",
+    //   render: (record) => (
+    //     <>
+    //       <span className="user-name">{record.Date}</span>
+    //       <br />
+    //       <span>{record.time}</span>
+    //     </>
+    //   ),
+    //   sorter: (a, b) => a.length - b.length,
+    // },
 
     {
       title: "Account Status",
@@ -198,7 +232,7 @@ const Doctors = () => {
                   <div className="table-responsive">
                     <Table
                       pagination={{
-                        total: data.length,
+                        total: doctoers.length,
                         showTotal: (total, range) =>
                           `Showing ${range[0]} to ${range[1]} of ${total} entries`,
                         showSizeChanger: true,
@@ -207,7 +241,7 @@ const Doctors = () => {
                       }}
                       style={{ overflowX: "auto" }}
                       columns={columns}
-                      dataSource={data}
+                      dataSource={doctoers.doctors}
                       rowKey={(record) => record.id}
                     //  onChange={this.handleTableChange}
                     />

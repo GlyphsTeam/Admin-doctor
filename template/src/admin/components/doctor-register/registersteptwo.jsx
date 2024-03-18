@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 // import loginBanner from "../../../assets/images/login-banner.png";
 import Logo from "../../assets/img/logo.png";
-import camera from "../../assets/icons/camera.svg";
 import male from "../../assets/icons/male.png";
 import female from "../../assets/icons/female.png";
 import Alert from '../Alert/Alert';
+import axios from 'axios';
+import { IoMdClose } from "react-icons/io";
 
 import {
   setName,
@@ -24,10 +26,19 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 
-const Registersteptwo = () => {
+const Registersteptwo = ({ backendUrl }) => {
   const dispatch = useDispatch();
   const registerState = useSelector((state) => state.register);
   const navgation = useNavigate();
+  const [allSpeciales, setAllSpeciales] = useState(null);
+
+  const getSpecialeies = async () => {
+    await axios.get(`https://${backendUrl}/specialties`).then((res) => {
+      setAllSpeciales(res.data.data);
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
 
   useEffect(() => {
     document.body.classList.add("account-page");
@@ -40,15 +51,19 @@ const Registersteptwo = () => {
   const [message, setMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [type, setType] = useState("");
-
+  const [selectSpeical, setSelectSpeical] = useState([]);
   const showAlertMessage = (message, type) => {
     setCount(1);
     setMessage(message);
     setShowAlert(true);
     setType(type);
   };
+  useEffect(() => {
+    getSpecialeies();
+  }, []);
 
-  const handlerRegister = (e) => {
+
+  const handlerRegister = async (e) => {
 
     e.preventDefault();
 
@@ -58,11 +73,11 @@ const Registersteptwo = () => {
     const dateValue = e.target.date.value;
     const specialitiesValue = e.target.specialities.value;
     const idnumber = e.target.idnumber.value;
-    const nationalityValue = e.target.nationality;
-    const cardNumberValue = e.target.cardnumber;
+    const nationalityValue = e.target.nationality.value;
+    const cardNumberValue = e.target.cardnumber.value;
 
     if (!specialitiesValue) {
-      showAlertMessage("The Specialities fuekd us required.", "warning");
+      showAlertMessage("The Specialities field us required.", "warning");
     }
     if (!dateValue) {
       showAlertMessage("The Age field is required.", "warning");
@@ -92,33 +107,48 @@ const Registersteptwo = () => {
       dispatch(setGender(genderValue));
       dispatch(setDate(dateValue));
       let formData = new FormData();
-
+      const token = localStorage.getItem("access_token");
       formData.append("name", registerState.name);
       formData.append("password", registerState.password);
-      formData.append("phone", registerState.phone);
-      formData.append("img", registerState.img);
-      formData.append("gender", registerState.gender);
+      formData.append("phone_number", registerState.phone);
+      formData.append("image", registerState.img);
+      formData.append("gender", genderValue);
       formData.append("address", registerState.address);
       formData.append("certifcate", registerState.certifcate);
       formData.append("uploadImg", registerState.uploadImg);
       formData.append("date", registerState.date);
-      formData.append("cardNumber", registerState.cardNumber);
-      formData.append("nationality", registerState.nationality);
-      formData.append("doctorId", registerState.doctorId);
-      formData.append("specialities", registerState.specialities);
+      formData.append("cardNumber", cardNumberValue);
+      formData.append("nationality", nationalityValue);
+      formData.append("id_number", idnumber);
+      selectSpeical && selectSpeical.forEach((item, index)=>{
+        formData.append(`specialization[${index}]`, item?.id);
+      })
+      formData.append("guard", "doctor");
+      formData.append("email", registerState?.email);
 
-      dispatch(setDoctorID(""));
-      dispatch(setCardNumber(""));
-      dispatch(setNationality(""));
-      dispatch(setSpecialities(""));
-      dispatch(setPassword(""));
-      dispatch(setPhone(""));
-      dispatch(setUploadImg(null));
-      dispatch(setGender(""));
-      dispatch(setImage(null));
-      dispatch(setName(""));
-      dispatch(setCertfcation(null));
-      navgation("/admin/register-step- 3");
+      await axios.post(`https://${backendUrl}/register`, formData, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      }).then((res) => {
+        dispatch(setDoctorID(""));
+        dispatch(setCardNumber(""));
+        dispatch(setNationality(""));
+        dispatch(setSpecialities(""));
+        dispatch(setPassword(""));
+        dispatch(setPhone(""));
+        dispatch(setUploadImg(null));
+        dispatch(setGender(""));
+        dispatch(setImage(null));
+        dispatch(setName(""));
+        dispatch(setCertfcation(null));
+        // navgation("/admin/doctor-list");
+        console.log("res>>>>>", res)
+      }).catch((err) => {
+        console.log(err)
+        console.log(err?.status_number)
+      })
+
     }
   }
   const handlerUpload = (e) => {
@@ -133,6 +163,20 @@ const Registersteptwo = () => {
       dispatch(setCertfcation(image))
     }
   }
+  const handlerSpesial = (value) => {
+    const specialte = allSpeciales?.find(item => item.id === parseInt(value));
+    setSelectSpeical([...selectSpeical, {
+      name: specialte?.name,
+      id: value
+    }]);
+  }
+  const handlerRemoveSpecial = (id) => {
+    setSelectSpeical(prev=>{
+      return prev.filter(item => item.id !== id);
+    });
+
+  }
+
   return (
     <>
       {/* Page Content */}
@@ -176,7 +220,7 @@ const Registersteptwo = () => {
                               id="test1"
                               name="gender"
                               defaultChecked=""
-                              defaultValue="Male"
+                              defaultValue="male"
                             />
                             <label htmlFor="test1">
                               <span className="gender-icon">
@@ -190,7 +234,7 @@ const Registersteptwo = () => {
                               type="radio"
                               id="test2"
                               name="gender"
-                              defaultValue="Female"
+                              defaultValue="female"
                             />
                             <label htmlFor="test2">
                               <span className="gender-icon">
@@ -270,7 +314,7 @@ const Registersteptwo = () => {
                             id="zipcode"
                           />
                         </div> */}
-                        <div className="form-group">
+                        {/* <div className="form-group">
                           <label>Certification and Employer</label>
                           <div className="row justify-content-center">
                             <div className="col-12 col-md-6 d-flex">
@@ -320,7 +364,7 @@ const Registersteptwo = () => {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="form-group">
                           <label>Your Date</label>
                           <input
@@ -338,14 +382,22 @@ const Registersteptwo = () => {
                             name="specialities"
                             tabIndex={-1}
                             aria-hidden="true"
+                            onChange={(e) => handlerSpesial(e.target.value)}
                           >
                             <option value="">Select your blood group</option>
-                            <option value="A-">Urology</option>
-                            <option value="A+">Neurology</option>
-                            <option value="B-">Orthopedic</option>
-                            <option value="B+">Cardiologist</option>
-                            <option value="AB-">Dentist</option>
+
+                            {allSpeciales && allSpeciales?.map((item) => {
+                              return <option value={item?.id} key={item?.id}>{item?.name}</option>
+
+                            })}
+
                           </select>
+                          {selectSpeical && selectSpeical.map((item) => {
+                            return <div className="selectSpcialContanier" key={item?.id}>
+                              <li >{item?.name}</li>
+                              <IoMdClose onClick={() => handlerRemoveSpecial(item?.id)} className="closeBtn" />
+                            </div>
+                          })}
                         </div>
                       </div>
                       <div className="mt-5">

@@ -19,6 +19,16 @@
   color: #fff;
   font-weight: 600;
 }
+.closeBtn{
+  cursor: pointer;
+  color: var(--danger2-color);
+}
+.selectSpcialContanier{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
 a{
   text-decoration: none !important;
 }

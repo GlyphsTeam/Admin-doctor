@@ -91,7 +91,7 @@ const Registerstepthree = () => {
       dispatch(setImage(null));
       dispatch(setName(""));
       dispatch(setCertfcation(null));
-      navgation.push("")
+      navgation.push("/admin/doctor-list")
     }
 
   }
