@@ -61,6 +61,8 @@ const Login = ({ backendUrl }) => {
         dispatch(setAuth(true));
         setEmail("");
         setPassword("");
+        localStorage.setItem("email",res?.data?.data?.email);
+        localStorage.setItem("name", res.data?.data?.name);
         localStorage.setItem("access_token", res.data?.data?.token)
         navigate("/admin");
 

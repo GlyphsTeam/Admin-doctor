@@ -19,7 +19,15 @@
   color: #fff;
   font-weight: 600;
 }
-.closeBtn{
+.dropdownMenu{
+  position:absolute;
+  left: -131px;
+}
+.imgCertifcate{
+  height: 100px !important;
+    width: 100px !important;
+}
+.closeBtn,.removeImage{
   cursor: pointer;
   color: var(--danger2-color);
 }
@@ -28,6 +36,15 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 20px;
+}
+.imagesContainer{
+  
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px ,1fr));
+}
+.removeImage{
+
+
 }
 a{
   text-decoration: none !important;

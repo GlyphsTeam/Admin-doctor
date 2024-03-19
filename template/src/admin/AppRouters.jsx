@@ -60,7 +60,6 @@ const EditSlider = lazy(() => import("./components/sliders/EditSlider"));
 const AddSlider = lazy(() => import("./components/sliders/AddSliders"))
 
 
-
 const AppRouters = function () {
     let backendUrl = "arab-texas.com/api";
     const dispatch = useDispatch();
@@ -126,6 +125,8 @@ const AppRouters = function () {
                                 <Navigate to='/admin/login' />
                             )}
                         />
+                  
+                 
                         <Route
                             path="/admin/slider"
                             exact

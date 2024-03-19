@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 // import FeatherIcon from "feather-icons-react";
 // import { avatar01, avatar02, avatar03, avatar05, avatar06, logo, logoSmall } from '../imagepath'
@@ -13,28 +13,34 @@ import {
   patient2,
   patient3,
 } from "../imagepath";
-
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setAuth } from '../../../store/Auth/auth.js'
 const Header = (props) => {
   // let pathname = props.location.pathname;
   // const { isAuth, setIsAuth } = useContext(Appcontext);
-  // const [task, settask] = useState(true);
-  // const [task1, settask1] = useState(true);
-  // const [dropdown, setdropdown] = useState(false);
-  // const [dropdown1, setdropdown1] = useState(false);
+  const [task, settask] = useState(true);
+  const [task1, settask1] = useState(true);
+  const [dropdown, setdropdown] = useState(false);
+  const [dropdown1, setdropdown1] = useState(false);
+  const navgation = useNavigate();
+  const dispatch = useDispatch();
 
-  // const handletheme = () => {
-  //   document.body.classList.toggle("darkmode");
-  //   settask(!task);
-  //   settask1(!task1);
-  // };
-  // const handledropdown = () => {
-  //   setdropdown(!dropdown);
-  //   setdropdown1(false);
-  // };
-  // const handledropdown1 = () => {
-  //   setdropdown1(!dropdown1);
-  //   setdropdown(false);
-  // };
+
+
+  const handletheme = () => {
+    document.body.classList.toggle("darkmode");
+    settask(!task);
+    settask1(!task1);
+  };
+  const handledropdown = () => {
+    setdropdown(!dropdown);
+    setdropdown1(false);
+  };
+  const handledropdown1 = () => {
+    setdropdown1(!dropdown1);
+    setdropdown(false);
+  };
   const handlesidebar = () => {
     document.body.classList.toggle("mini-sidebar");
   };
@@ -55,6 +61,17 @@ const Header = (props) => {
   const exclusionArray = ["/admin/login"];
   if (exclusionArray.indexOf(props.location?.pathname) >= 0) {
     return "";
+  }
+  const handlerLogout = () => {
+    localStorage.removeItem("access_token");
+    dispatch(setAuth(false));
+    navgation("/admin/login")
+  }
+  const handlerSetting = () => {
+    navgation("/admin/settings")
+  }
+  const handlerProfile = () => {
+    navgation(`/admin/profile`);
   }
 
   return (
@@ -233,17 +250,19 @@ const Header = (props) => {
               to="#"
               className="dropdown-toggle nav-link"
               data-bs-toggle="dropdown"
+              onClick={() => handledropdown()}
             >
               <span className="user-img">
                 <img
                   className="rounded-circle"
                   src={avatar01}
                   width={31}
+
                   alt="Ryan Taylor"
                 />
               </span>
             </Link>
-            <div className="dropdown-menu">
+            <div className={`dropdown-menu  dropdownMenu ${dropdown ? "show" : ""}`}>
               <div className="user-header">
                 <div className="avatar avatar-sm">
                   <img
@@ -253,19 +272,19 @@ const Header = (props) => {
                   />
                 </div>
                 <div className="user-text">
-                  <h6>Ryan Taylor</h6>
+                  <h6>{localStorage.getItem("name")}</h6>
                   <p className="text-muted mb-0">Administrator</p>
                 </div>
               </div>
-              <Link className="dropdown-item" to="/admin/profile">
+              <button className="dropdown-item" onClick={() => handlerProfile()}>
                 My Profile
-              </Link>
-              <Link className="dropdown-item" to="/admin/settings">
+              </button>
+              <button className="dropdown-item" onClick={()=>handlerSetting()}>
                 Settings
-              </Link>
-              <Link className="dropdown-item" to="/admin/login">
+              </button>
+              <button className="dropdown-item" onClick={() => handlerLogout()}>
                 Logout
-              </Link>
+              </button>
             </div>
           </li>
           {/* /User Menu */}

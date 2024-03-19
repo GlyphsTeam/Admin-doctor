@@ -1,12 +1,14 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 // import loginBanner from "../../../assets/images/login-banner.png";
 import Logo from "../../assets/img/logo.png";
 import male from "../../assets/icons/male.png";
 import female from "../../assets/icons/female.png";
+import camera from '../../assets/icons/camera.svg'
 import Alert from '../Alert/Alert';
 import axios from 'axios';
 import { IoMdClose } from "react-icons/io";
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   setName,
@@ -52,6 +54,7 @@ const Registersteptwo = ({ backendUrl }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [type, setType] = useState("");
   const [selectSpeical, setSelectSpeical] = useState([]);
+  const [images, setImages] = useState([]);
   const showAlertMessage = (message, type) => {
     setCount(1);
     setMessage(message);
@@ -62,7 +65,11 @@ const Registersteptwo = ({ backendUrl }) => {
     getSpecialeies();
   }, []);
 
-
+  const handlerRemoveImage = (id) => {
+    setImages(prev => {
+      return prev.filter((image) => image?.id !== id);
+    })
+  }
   const handlerRegister = async (e) => {
 
     e.preventDefault();
@@ -120,7 +127,7 @@ const Registersteptwo = ({ backendUrl }) => {
       formData.append("cardNumber", cardNumberValue);
       formData.append("nationality", nationalityValue);
       formData.append("id_number", idnumber);
-      selectSpeical && selectSpeical.forEach((item, index)=>{
+      selectSpeical && selectSpeical.forEach((item, index) => {
         formData.append(`specialization[${index}]`, item?.id);
       })
       formData.append("guard", "doctor");
@@ -151,6 +158,30 @@ const Registersteptwo = ({ backendUrl }) => {
 
     }
   }
+
+  const handleImageDrop = useCallback((acceptedFiles) => {
+    if (images.length + acceptedFiles?.length > 6) {
+      showAlertMessage("You can upload only 6 images.", "warning");
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+    } else {
+      const isImage = acceptedFiles?.every(file => file.type.startsWith('image/'));
+      if (isImage) {
+        const imagesWithIds = acceptedFiles.map(file => ({ id: uuidv4(), file }));
+        setImages(prevImages => [...prevImages, ...imagesWithIds]);
+      } else {
+        showAlertMessage("Please upload only images.", "warning");
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        }, 3000);
+      }
+    }
+  }, [images]);
+  console.log("images>>>", images)
+
   const handlerUpload = (e) => {
     const image = e.target.files[0];
     console.log(image)
@@ -171,7 +202,7 @@ const Registersteptwo = ({ backendUrl }) => {
     }]);
   }
   const handlerRemoveSpecial = (id) => {
-    setSelectSpeical(prev=>{
+    setSelectSpeical(prev => {
       return prev.filter(item => item.id !== id);
     });
 
@@ -314,7 +345,7 @@ const Registersteptwo = ({ backendUrl }) => {
                             id="zipcode"
                           />
                         </div> */}
-                        {/* <div className="form-group">
+                        <div className="form-group">
                           <label>Certification and Employer</label>
                           <div className="row justify-content-center">
                             <div className="col-12 col-md-6 d-flex">
@@ -328,11 +359,21 @@ const Registersteptwo = ({ backendUrl }) => {
                                 <input
                                   type="file"
                                   id="quali_certificate"
-                                  onChange={(e) => handlerUpload(e)}
+                                  onChange={(e) => handleImageDrop(Array.from(e.target.files))}
                                   name="quali_certificate"
+                                  multiple
                                 />
                               </div>
                             </div>
+                            <div className="imagesContainer">
+                              {images.map((item) => {
+                                return <div key={item?.id} className="selectSpcialContanier m-10" >
+                                  <img loading="lazy" src={window.URL.createObjectURL(item?.file)} key={item?.id} className="imgCertifcate" />
+                                  <IoMdClose className="removeImage" onClick={() => handlerRemoveImage(item?.id)} />
+                                </div>
+                              })}
+                            </div>
+
                             <div className="col-12 col-md-6 d-flex">
                               <div className="profile-pic-upload d-flex flex-wrap justify-content-center">
                                 <div className="cam-col">
@@ -364,7 +405,7 @@ const Registersteptwo = ({ backendUrl }) => {
                               </div>
                             </div>
                           </div>
-                        </div> */}
+                        </div>
                         <div className="form-group">
                           <label>Your Date</label>
                           <input

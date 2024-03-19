@@ -79,6 +79,7 @@
     "style-loader": "^3.3.1",
     "styled-components": "^6.0.7",
     "swiper": "^8.4.7",
+    "uuid": "^9.0.1",
     "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
