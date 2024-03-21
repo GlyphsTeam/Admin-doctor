@@ -1,70 +1,64 @@
-import React from "react";
+/* eslint-disable react/prop-types */
+import React, { useEffect } from "react";
 import { Table } from "antd";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { itemRender, onShowSizeChange } from "../paginationfunction";
 import SidebarNav from "../sidebar";
-import {
-  specialities_01,
-  specialities_02,
-  specialities_03,
-  specialities_04,
-  specialities_05,
-} from "../imagepath";
-import { Link } from "react-router-dom";
+import { setSpecialities } from '../../../store/Specialities/specialities';
+import { useSelector, useDispatch } from 'react-redux';
 
-const Specialities = () => {
-  const data = [
-    {
-      id: 1,
-      PatientName: "#SP001",
-      Specialities: "Urology",
-      Description: " ",
-      Date: "27 Sep 2019",
-      time: "03.40 PM",
-      image: specialities_01,
-    },
-    {
-      id: 2,
-      PatientName: "#SP002",
-      Specialities: "Neurology",
-      Description: " ",
-      Date: "1 Nov 2019",
-      time: "02.59 PM",
-      image: specialities_02,
-    },
-    {
-      id: 3,
-      PatientName: "#SP003",
-      Specialities: "Orthopedic",
-      Description: " ",
-      Date: "3 Nov 2019",
-      time: "09.59 PM",
-      image: specialities_03,
-    },
-    {
-      id: 4,
-      PatientName: "#SP004",
-      Specialities: "Cardiologist",
-      Description: " ",
-      Date: "16 Jun 2019",
-      time: "04.50 PM",
-      image: specialities_04,
-    },
-    {
-      id: 5,
-      PatientName: "#SP005",
-      Specialities: "Dentist",
-      Description: " ",
-      Date: "22 Aug 2019",
-      time: "01.50 PM",
-      image: specialities_05,
-    },
-  ];
+import { Link } from "react-router-dom";
+import axios from 'axios';
+
+const Specialities = ({ backendUrl }) => {
+  const stateSpecialiteies = useSelector((state) => state.specialities);
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("access_token");
+
+
+  const deleteOneSpecialite = async (id) => {
+    await axios.delete(`https://${backendUrl}/admin/specialties/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+
+    }).then(() => {
+      getSpecialities();
+
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+  const getSpecialities = async () => {
+    await axios.get(`https://${backendUrl}/admin/specialties`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+
+    }).then((res) => {
+
+      dispatch(setSpecialities(res.data?.data));
+
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
+  useEffect(() => {
+    getSpecialities();
+  }, [stateSpecialiteies?.specialitiesData])
+
+
   const columns = [
     {
-      title: "#",
-      dataIndex: "PatientName",
+      title: "Name",
+      dataIndex: "Name",
+      render: (text, record) => (
+        <>
+
+          <p to="/admin/profile">{record?.name}</p>
+        </>
+      ),
       sorter: (a, b) => a.PatientName.length - b.PatientName.length,
     },
     {
@@ -84,24 +78,25 @@ const Specialities = () => {
       title: "Action",
       className: "text-end",
       dataIndex: "",
-      render: () => (
+      render: (text, record) => (
         <div className="text-end">
-          <a
-            href="#"
+          <Link
+             to={`/admin/edit-specialities/${record?.id}`}
             className="me-1 btn btn-sm bg-success-light "
             data-bs-toggle="modal"
             data-bs-target="#edit_specialities_details"
           >
             <i className="fe fe-pencil"></i> Edit
-          </a>
-          <a
-            href="#"
+          </Link>
+          <button
+           
             className="me-1 btn btn-sm bg-danger-light"
             data-bs-toggle="modal"
             data-bs-target="#delete_modal"
+            onClick={() => deleteOneSpecialite(record?.id)}
           >
             <i className="fe fe-trash"></i> Delete
-          </a>
+          </button>
         </div>
       ),
       sorter: (a, b) => a.length - b.length,
@@ -144,7 +139,7 @@ const Specialities = () => {
                   <div className="table-responsive">
                     <Table
                       pagination={{
-                        total: data.length,
+                        total: stateSpecialiteies?.specialitiesData?.length,
                         showTotal: (total, range) =>
                           `Showing ${range[0]} to ${range[1]} of ${total} entries`,
                         showSizeChanger: true,
@@ -153,9 +148,9 @@ const Specialities = () => {
                       }}
                       style={{ overflowX: "auto" }}
                       columns={columns}
-                      dataSource={data}
+                      dataSource={stateSpecialiteies?.specialitiesData}
                       rowKey={(record) => record.id}
-                      //  onChange={this.handleTableChange}
+                    //  onChange={this.handleTableChange}
                     />
                   </div>
                 </div>

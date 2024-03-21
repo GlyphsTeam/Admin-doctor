@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 // import { useHistory } from "react-router-dom";
 import loginBanner from "../../assets/img/login-banner.png";
 import { Link, useNavigate } from "react-router-dom";
-import { setName, setPassword, setPhone,setEmail } from '../../../store/DoctorRegister/register';
+import { setName, setPassword, setPhone, setEmail } from '../../../store/DoctorRegister/register';
 import Header from "../header/index";
 import { useDispatch } from 'react-redux'
 // import Footer from "../../components/";
@@ -10,7 +10,7 @@ import Alert from '../Alert/Alert';
 
 
 const DoctorRegister = (props) => {
-  
+
   const name = useRef(null);
   const phoneNumber = useRef(null);
   const password = useRef(null);
@@ -51,19 +51,19 @@ const DoctorRegister = (props) => {
     if (!phoneValue) {
       alertShowMessage("The phone field is required", "warning");
     }
-    if(!emailValue){
+    if (!emailValue) {
       alertShowMessage("The Email field is required", "warning");
     }
     if (!nameValue) {
       alertShowMessage("The name field is required", "warning");
     }
-    if (nameValue !== "" && phoneValue !== "" && passwordValue !== "") {
+    if (nameValue !== "" && phoneValue !== "" && passwordValue !== "" && emailValue !== "") {
 
       dispatch(setName(nameValue));
       dispatch(setPassword(passwordValue));
       dispatch(setPhone(phoneValue));
       dispatch(setEmail(emailValue));
-      
+
       navgation("/admin/registerstepone")
     }
 

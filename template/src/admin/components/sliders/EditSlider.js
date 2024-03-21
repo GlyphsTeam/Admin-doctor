@@ -66,7 +66,7 @@ const Form = ({ backendUrl }) => {
         }
     }
 
-    const handlerAddSpecialities = async (e) => {
+    const handlerEditSlider = async (e) => {
         e.preventDefault();
 
         const titleEn = e.target.titleEn.value;
@@ -107,7 +107,8 @@ const Form = ({ backendUrl }) => {
 
                 await axios.post(`https://${backendUrl}/admin/sliders/${id}`, formData, {
                     headers: {
-                        "Authorization": `Bearer ${token}`
+                        "Authorization": `Bearer ${token}`,
+                       
                     }
                 }).then(() => {
                     setImage(null);
@@ -139,7 +140,7 @@ const Form = ({ backendUrl }) => {
                             <h5 className="mb-3">Edit Welcome</h5>
                             <div className="row">
                                 <div className="col-md-6">
-                                    <form onSubmit={handlerAddSpecialities}>
+                                    <form onSubmit={handlerEditSlider}>
                                         <div className="form-group form-focus">
                                             <div className="input-placeholder passcode-wrap mail-box">
                                                 <label className="focus-label">

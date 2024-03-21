@@ -5,10 +5,11 @@ import SidebarNav from "../sidebar";
 import Alert from "../Alert/Alert";
 import Camera from '../../assets/icons/camera.svg'
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Form = ({ backendUrl }) => {
     const { id } = useParams();
+    const navigation = useNavigate();
     const [count, setCount] = useState(0);
     const [type, setType] = useState("");
     const [message, setMessage] = useState("");
@@ -61,7 +62,7 @@ const Form = ({ backendUrl }) => {
         }
     }
 
-    const handlerAddSpecialities = async (e) => {
+    const handlerEditWelcome = async (e) => {
         e.preventDefault();
 
         const titleEn = e.target.titleEn.value;
@@ -107,6 +108,7 @@ const Form = ({ backendUrl }) => {
                 }).then((res) => {
                     setImage(null);
                     e.target.reset();
+                    navigation("/admin/welcome")
 
                 }).catch((err) => {
                     console.log(err);
@@ -133,7 +135,7 @@ const Form = ({ backendUrl }) => {
                             <h5 className="mb-3">Edit Welcome</h5>
                             <div className="row">
                                 <div className="col-md-6">
-                                    <form onSubmit={handlerAddSpecialities} encType="multipart/form-data">
+                                    <form onSubmit={handlerEditWelcome} encType="multipart/form-data">
                                         <div className="form-group form-focus">
                                             <div className="input-placeholder passcode-wrap mail-box">
                                                 <label className="focus-label">

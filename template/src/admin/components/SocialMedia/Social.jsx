@@ -9,71 +9,58 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 
 
-
-const Sliders = ({ backendUrl }) => {
-  const [sliders, setSliders] = useState(null);
+const Welcome = ({ backendUrl }) => {
+  const [welcome, setWelcome] = useState([]);
   const token = localStorage.getItem("access_token");
-  
-  const deleteSlider = async (id) => {
-    await axios.delete(`https://${backendUrl}/admin/sliders/${id}`, {
+
+  const deleteSocial = async (id) => {
+    await axios.delete(`https://${backendUrl}/admin/social_media/${id}`, {
       headers: {
         "Authorization": `Bearer ${token}`,
       }
     }).then(() => {
-      getSliders();
+      getSocialMedia();
 
     }).catch((err) => console.log(err));
   }
 
-  const getSliders = async () => {
-    await axios.get(`https://${backendUrl}/admin/sliders`, {
+  const getSocialMedia = async () => {
+    await axios.get(`https://${backendUrl}/admin/social_media`, {
       headers: {
         "Authorization": `Bearer ${token}`
       }
     }).then((res) => {
-      setSliders(res.data?.data)
+      setWelcome(res.data?.data)
 
     }).catch((err) => console.log(err))
   }
   useEffect(() => {
 
-    getSliders();
+    getSocialMedia();
   }, []);
-
 
 
   const columns = [
     {
-      title: "welcome",
-      dataIndex: "welcome",
-      render: (text, record) => (
-        <>
-          <Link className="avatar mx-2" to="/admin/profile">
-            <img src={record.image} />
-          </Link>
-          <Link to="/admin/profile">{text}</Link>
-        </>
-      ),
-      sorter: (a, b) => a.record.length - b.record.length,
-    },
-    {
-      title: "type",
-      dataIndex: "type",
-      render: (text, record) => (
-        <>
-          <p>{record?.type}</p>
-        </>
-      ),
-    },
+        title: "Type",
+        dataIndex: "social",
+        render: (text, record) => (
+          <>
+            
+            <p >{record?.type}</p>
+          </>
+        ),
+        sorter: (a, b) => a.record.length - b.record.length,
+      },
     {
 
-      title: "Action",
+      title: "Type",                                                                                                             
       className: "text-end",
       dataIndex: "",
       render: (text, record) => (
-        <div className="text-end">
+        <div className="text-end" key={record.id}>
           <Link
-            to={`/admin/edit-slider/${record.id}`}
+            to={`/admin/edit-social/${record.id}`}
             className="me-1 btn btn-sm bg-success-light "
             data-bs-toggle="modal"
             data-bs-target="#edit_specialities_details"
@@ -81,7 +68,7 @@ const Sliders = ({ backendUrl }) => {
             <i className="fe fe-pencil"></i> Edit
           </Link>
           <a
-            onClick={() => deleteSlider(record.id)}
+            onClick={() => deleteSocial(record.id)}
             className="me-1 btn btn-sm bg-danger-light"
             data-bs-toggle="modal"
             data-bs-target="#delete_modal"
@@ -103,17 +90,17 @@ const Sliders = ({ backendUrl }) => {
           <div className="page-header">
             <div className="row">
               <div className="col-sm-7 col-aut0">
-                <h3 className="page-title">Sliders</h3>
+                <h3 className="page-title">Welcome</h3>
                 <ul className="breadcrumb">
                   <li className="breadcrumb-item">
                     <Link to="/admin">Dashboard</Link>
                   </li>
-                  <li className="breadcrumb-item active">Sliders</li>
+                  <li className="breadcrumb-item active">Welcome</li>
                 </ul>
               </div>
               <div className="col-sm-5 col">
                 <Link
-                  to="/admin/add-slider"
+                  to="/admin/add-social"
                   data-bs-toggle="modal"
                   className="btn btn-primary float-end mt-2"
                 >
@@ -130,7 +117,7 @@ const Sliders = ({ backendUrl }) => {
                   <div className="table-responsive">
                     <Table
                       pagination={{
-                        total: sliders?.length,
+                        total: welcome?.length,
                         showTotal: (total, range) =>
                           `Showing ${range[0]} to ${range[1]} of ${total} entries`,
                         showSizeChanger: true,
@@ -139,7 +126,7 @@ const Sliders = ({ backendUrl }) => {
                       }}
                       style={{ overflowX: "auto" }}
                       columns={columns}
-                      dataSource={sliders}
+                      dataSource={welcome}
                       rowKey={(record) => record.id}
                     //  onChange={this.handleTableChange}
                     />
@@ -268,4 +255,4 @@ const Sliders = ({ backendUrl }) => {
   );
 };
 
-export default Sliders;
+export default Welcome;

@@ -47,6 +47,8 @@ const DoctorRegister = lazy(() => import("./components/doctor-register/index"));
 const Registerstepone = lazy(() => import("./components/doctor-register/registerstepone"));
 const Registersteptwo = lazy(() => import("./components/doctor-register/registersteptwo"));
 const AddSpecialities = lazy(() => import("./components/AddSpecialities/Form"));
+const EditSpecilities = lazy(()=>import("./components/AddSpecialities/EditSpecialites"));
+
 const PatientRegister = lazy(() => import("./components/PatientRegister/PatientRegister"));
 const Patientregisterstepone = lazy(() => import("./components/registerPatient/patientregistersPatienttepone"));
 const Patientregistersteptwo = lazy(() => import("./components/registerPatient/patientregistersteptwo"));
@@ -58,6 +60,12 @@ const AddWelcome = lazy(() => import("./components/welcomeScreen/AddWelcome"))
 const EditWelcome = lazy(() => import("./components/welcomeScreen/EditWelcome"));
 const EditSlider = lazy(() => import("./components/sliders/EditSlider"));
 const AddSlider = lazy(() => import("./components/sliders/AddSliders"))
+const EditDoctor = lazy(() => import("./components/doctors/EditDoctors"));
+const Social = lazy(() => import("./components/SocialMedia/Social"));
+const EditSocial = lazy(() => import("./components/SocialMedia/EditSocial"));
+const AddSocial = lazy(() => import("./components/SocialMedia/AddSocial"));
+const Message = lazy(() => import("./components/Message/Message"));
+
 
 
 const AppRouters = function () {
@@ -84,6 +92,13 @@ const AppRouters = function () {
                             (
                                 <Dashboard />
                             )} />
+                        <Route path="/admin" exact element={authState.isAuth ?
+                            (
+                                <Dashboard backendUrl={backendUrl} />
+                            ) :
+                            (
+                                <Login />
+                            )} />
                         <Route path="/admin/register" exact element={<Register />} />
                         <Route
                             path="/admin/forgotPassword"
@@ -91,13 +106,53 @@ const AppRouters = function () {
                             element={<ForgotPassword />}
 
                         />
-                        <Route path="/admin" exact element={
+                        <Route path="/admin/social" exact element={
                             authState.isAuth ?
                                 (
-                                    <Dashboard />
+                                    <Social backendUrl={backendUrl} />
                                 ) : (
                                     <Navigate to="/admin/login" />
                                 )} />
+
+                        <Route path="/admin/messages" exact
+                            element={
+                                authState.isAuth ?
+                                    (
+                                        <Message backendUrl={backendUrl} />
+                                    ) : (
+                                        <Navigate to="/admin/login" />
+                                    )
+                            }
+
+                        />
+
+                        <Route
+                            path="/admin/edit-social/:id"
+                            exact
+                            element={authState.isAuth ? (
+                                <EditSocial backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )}
+                        />
+                        <Route
+                            path="/admin/add-social"
+                            exact
+                            element={authState.isAuth ? (
+                                <AddSocial backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )}
+                        />
+                        <Route
+                            path="/admin/appointment-list"
+                            exact
+                            element={authState.isAuth ? (
+                                <Appointments />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )}
+                        />
                         <Route
                             path="/admin/appointment-list"
                             exact
@@ -125,8 +180,8 @@ const AppRouters = function () {
                                 <Navigate to='/admin/login' />
                             )}
                         />
-                  
-                 
+
+
                         <Route
                             path="/admin/slider"
                             exact
@@ -143,18 +198,30 @@ const AppRouters = function () {
                         />
                         <Route path="/admin/specialities" exact element={
                             authState.isAuth ? (
-                                <Specialities />
+                                <Specialities backendUrl={backendUrl} />
                             ) : (
                                 <Navigate to="/admin/login" />
                             )
                         } />
                         <Route path="/admin/doctor-list" exact element={
                             authState.isAuth ? (
-                                <Doctors backendUrl={backendUrl}/>
+                                <Doctors backendUrl={backendUrl} />
                             ) : (
                                 <Navigate to="/admin/login" />
                             )
                         } />
+                        <Route
+                            path="/admin/doctor-edit"
+                            exact
+                            element={
+                                authState.isAuth ? (
+                                    <EditDoctor backendUrl={backendUrl} />
+                                ) : (
+                                    <Navigate to="/admin/login" />
+                                )
+                            }
+
+                        />
                         <Route path="/admin/patient-list" exact element={authState.isAuth ? (
                             <Patients />
                         ) : (
@@ -180,7 +247,17 @@ const AppRouters = function () {
                             path="/admin/add-specialities"
                             exact
                             element={authState.isAuth ? (
-                                <AddSpecialities />
+                                <AddSpecialities backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to='/admin/login' />
+                            )
+                            }
+                        />
+                        <Route
+                            path="/admin/edit-specialities/:id"
+                            exact
+                            element={authState.isAuth ? (
+                                <EditSpecilities backendUrl={backendUrl} />
                             ) : (
                                 <Navigate to='/admin/login' />
                             )
@@ -275,7 +352,7 @@ const AppRouters = function () {
                         <Route
                             path="/admin/register-step-2"
                             exact
-                            element={<Registersteptwo backendUrl={backendUrl}/>}
+                            element={<Registersteptwo backendUrl={backendUrl} />}
                         />
 
                         <Route path="/admin/settings" exact element={

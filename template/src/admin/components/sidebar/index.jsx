@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars";
 // import FeatherIcon from "feather-icons-react";
 import { useLocation } from "react-router-dom";
+import { SiWelcometothejungle } from "react-icons/si";
+import { TfiLayoutSlider } from "react-icons/tfi";
+import { FaHome } from "react-icons/fa";
+import { IoShareSocial } from "react-icons/io5";
+import { TiMessages } from "react-icons/ti";
 
 const SidebarNav = () => {
   // let pathname = props?.location?.pathname;
@@ -11,24 +16,24 @@ const SidebarNav = () => {
   const pathname = location.pathname;
 
   // const { setIsAuth } = useContext(Appcontext);
-  const [isSideMenu, setSideMenu] = useState("");
-  const [isSideMenuNew, setSideMenuNew] = useState("");
-  const [isSideMenuNew2, setSideMenuNew2] = useState("");
+  // const [isSideMenu, setSideMenu] = useState("");
+  // const [isSideMenuNew, setSideMenuNew] = useState("");
+  // const [isSideMenuNew2, setSideMenuNew2] = useState("");
 
-  const toggleSidebar = (value) => {
-    setSideMenu(value);
-  };
+  // const toggleSidebar = (value) => {
+  //   setSideMenu(value);
+  // };
 
-  const toggleSidebarNew = (value) => {
-    setSideMenuNew(value);
-  };
+  // const toggleSidebarNew = (value) => {
+  //   setSideMenuNew(value);
+  // };
 
-  const toggleSidebarNew2 = (value) => {
-    setSideMenuNew2(value);
-  };
+  // const toggleSidebarNew2 = (value) => {
+  //   setSideMenuNew2(value);
+  // };
 
   // eslint-disable-next-line no-unused-vars
-  const [isSidebarExpanded, setSidebarExpanded] = useState(false);
+  // const [isSidebarExpanded, setSidebarExpanded] = useState(false);
   const [isMouseOverSidebar, setMouseOverSidebar] = useState(false);
 
   useEffect(() => {
@@ -84,20 +89,26 @@ const SidebarNav = () => {
                 </li>
                 <li className={pathname === "/admin/edithome" ? "active" : ""}>
                   <Link to="/admin/edithome">
-                    <i className="fe fe-home"></i>
+                    <FaHome />
                     <span>Edit Home</span>
                   </Link>
                 </li>
                 <li className={pathname === "/admin/welcome" ? "active" : ""}>
                   <Link to="/admin/welcome">
-                    <i className="fe fe-home"></i>
+                    <SiWelcometothejungle />
                     <span>Welcome Screen</span>
                   </Link>
                 </li>
                 <li className={pathname === "/admin/slider" ? "active" : ""}>
                   <Link to="/admin/slider ">
-                    <i className="fe fe-home"></i>
+                    <TfiLayoutSlider />
                     <span>Slider</span>
+                  </Link>
+                </li>
+                <li className={pathname === "/admin/social" ? "active" : ""}>
+                  <Link to="/admin/social ">
+                    <IoShareSocial />
+                    <span>Social Media</span>
                   </Link>
                 </li>
                 <li
@@ -138,12 +149,17 @@ const SidebarNav = () => {
                     <i className="fe fe-star-o"></i> <span>Reviews</span>
                   </Link>
                 </li>
-              
+                <li className={pathname?.includes("messages") ? "active" : ""}>
+                  <Link to="/admin/messages">
+                    <TiMessages /> <span> Messages</span>
+                  </Link>
+                </li>
                 <li className={pathname?.includes("settings") ? "active" : ""}>
                   <Link to="/admin/settings">
                     <i className="fe fe-vector"></i> <span> Settings</span>
                   </Link>
                 </li>
+
                 <li className="menu-title">
                   <span>Pages</span>
                 </li>
@@ -152,7 +168,7 @@ const SidebarNav = () => {
                     <i className="fe fe-user-plus"></i> <span>Profile</span>
                   </Link>
                 </li>
-                <li className="submenu">
+                {/* <li className="submenu">
                   <Link
                     to="#"
                     className={isSideMenu == "authentication" ? "subdrop" : ""}
@@ -176,7 +192,7 @@ const SidebarNav = () => {
                       <Link
                         to="/admin/login"
                         className={pathname?.includes("login") ? "active" : ""}
-                        // onClick={() => setIsAuth("admin")}
+                      // onClick={() => setIsAuth("admin")}
                       >
                         {" "}
                         Login{" "}
@@ -188,7 +204,7 @@ const SidebarNav = () => {
                         className={
                           pathname?.includes("register") ? "active" : ""
                         }
-                        // onClick={() => setIsAuth("admin")}
+                      // onClick={() => setIsAuth("admin")}
                       >
                         {" "}
                         Register{" "}
@@ -200,16 +216,16 @@ const SidebarNav = () => {
                         className={
                           pathname?.includes("forgotpassword") ? "active" : ""
                         }
-                        // onClick={() => setIsAuth("admin")}
+                      // onClick={() => setIsAuth("admin")}
                       >
                         {" "}
                         Forgot Password{" "}
                       </Link>
                     </li>
-              
+
                   </ul>
-                </li>
-                <li className="submenu">
+                </li> */}
+                {/* <li className="submenu">
                   <Link
                     to="#"
                     className={isSideMenu == "errorpages" ? "subdrop" : ""}
@@ -231,7 +247,7 @@ const SidebarNav = () => {
                       <Link
                         to="/admin/404"
                         className={pathname?.includes("404") ? "active" : ""}
-                        // onClick={() => setIsAuth("admin")}
+                      // onClick={() => setIsAuth("admin")}
                       >
                         404 Error{" "}
                       </Link>
@@ -245,25 +261,25 @@ const SidebarNav = () => {
                       </Link>
                     </li>
                   </ul>
-                </li>
-                <li
+                </li> */}
+                {/* <li
                   className={pathname?.includes("blank-page") ? "active" : ""}
                 >
                   <Link to="/admin/blank-page">
                     <i className="fe fe-file"></i> <span>Blank Page</span>
                   </Link>
-                </li>
-                <li className="menu-title">
+                </li> */}
+                {/* <li className="menu-title">
                   <span>UI Interface</span>
-                </li>
-                <li
+                </li> */}
+                {/* <li
                   className={pathname?.includes("components") ? "active" : ""}
                 >
                   <Link to="/admin/components">
                     <i className="fe fe-vector"></i> <span>Components</span>
                   </Link>
-                </li>
-                <li className="submenu">
+                </li> */}
+                {/* <li className="submenu">
                   <Link
                     to="#"
                     className={isSideMenu == "forms" ? "subdrop" : ""}
@@ -341,8 +357,8 @@ const SidebarNav = () => {
                       </Link>
                     </li>
                   </ul>
-                </li>
-                <li className="submenu">
+                </li> */}
+                {/* <li className="submenu">
                   <Link
                     to="#"
                     className={isSideMenu == "tables" ? "subdrop" : ""}
@@ -379,8 +395,8 @@ const SidebarNav = () => {
                       </Link>
                     </li>
                   </ul>
-                </li>
-                <li className="submenu">
+                </li> */}
+                {/* <li className="submenu">
                   <Link
                     to="#"
                     className={isSideMenu == "multilevel" ? "subdrop" : ""}
@@ -468,7 +484,7 @@ const SidebarNav = () => {
                       </Link>
                     </li>
                   </ul>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>

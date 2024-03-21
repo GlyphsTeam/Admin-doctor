@@ -1,23 +1,44 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SidebarNav from "../sidebar";
 import Alert from "../Alert/Alert";
 import Camera from '../../assets/icons/camera.svg'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const Form = ({ backendUrl }) => {
+    const { id } = useParams();
+
     const [count, setCount] = useState(0);
     const [type, setType] = useState("");
     const [message, setMessage] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [image, setImage] = useState(null);
+    const [nameEn, setNameEn] = useState("");
+
     const navigation = useNavigate();
     const token = localStorage.getItem("access_token");
+    const [imageChange, setImageChange] = useState(null);
 
+    const handlerGetEdit = async (id) => {
+        await axios.get(`https://${backendUrl}/admin/specialties/${id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
 
+        }).then((res) => {
 
+            setNameEn(res.data?.data.name);
+            setImage(res.data?.data?.image);
+
+        }).catch((err) => console.log(err))
+    }
+    useEffect(() => {
+        if (id) {
+            handlerGetEdit(id)
+        }
+    }, [id])
 
     const showAlertMessage = (message, type) => {
         setCount(1);
@@ -34,22 +55,18 @@ const Form = ({ backendUrl }) => {
             showAlertMessage("The Image must be jpeg or png or jpg", "warning");
         }
         else {
-            setImage(image);
+            setImageChange(image)
+            setImage(URL.createObjectURL(image));
         }
     }
 
 
-    const handlerAddSpecialities = async (e) => {
+    const handlerEditSpecialities = async (e) => {
         e.preventDefault();
 
         const specialiteValueEn = e.target.specialiteEn.value;
         const specialiteValueAr = e.target.specialiteAr.value;
 
-
-        if (!image) {
-            showAlertMessage("The Image field is requried", "warning");
-        }
-   
         if (!specialiteValueAr) {
             showAlertMessage("The specialite Arabic Name is requried", "warning");
         }
@@ -61,9 +78,9 @@ const Form = ({ backendUrl }) => {
 
             formData.append("name[en]", specialiteValueEn);
             formData.append("name[ar]", specialiteValueAr);
-            formData.append("image", image);
+            imageChange && formData.append("image", imageChange);
 
-            await axios.post(`https://${backendUrl}/admin/specialties`, formData, {
+            await axios.post(`https://${backendUrl}/admin/specialties/${id}`, formData, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -96,13 +113,13 @@ const Form = ({ backendUrl }) => {
                             <h5 className="mb-3">Add a New Specialities</h5>
                             <div className="row">
                                 <div className="col-md-6">
-                                    <form onSubmit={handlerAddSpecialities}>
+                                    <form onSubmit={handlerEditSpecialities}>
                                         <div className="form-group form-focus">
                                             <div className="input-placeholder passcode-wrap mail-box">
                                                 <label className="focus-label">
                                                     Specialite Name (En) <span className="text-danger">*</span>
                                                 </label>
-                                                <input type="text" className="form-control floating" name="specialiteEn" />
+                                                <input type="text" defaultValue={nameEn} className="form-control floating" name="specialiteEn" />
                                             </div>
                                         </div>
                                         <div className="form-group form-focus">
@@ -115,7 +132,7 @@ const Form = ({ backendUrl }) => {
                                         </div>
                                         <div className="profile-pic-upload d-flex flex-wrap justify-content-center">
                                             <div className="cam-col">
-                                                <img src={image ? URL.createObjectURL(image) : Camera} alt="camera" />
+                                                <img src={image ? image : Camera} alt="camera" />
                                             </div>
                                             <input
                                                 type="file"
