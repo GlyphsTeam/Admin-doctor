@@ -13,7 +13,12 @@ const initialState = {
     bloodType: "",
     rate: "",
     location: "",
-    state: ""
+    state: "",
+    emergency_number: "",
+    date: null,
+    address: "",
+    email: "",
+    questionsIds: []
 }
 
 const registerRedux = createSlice({
@@ -55,6 +60,21 @@ const registerRedux = createSlice({
         },
         setState: (state, actions) => {
             state.state = actions.payload;
+        },
+        setEmergencyNumber: (state, actions) => {
+            state.emergency_number = actions.payload;
+        },
+        setDate: (state, actions) => {
+            state.date = actions.payload
+        },
+        setAddress: (state, actions) => {
+            state.address = actions.payload;
+        },
+        setEmail: (state, actions) => {
+            state.email = actions.payload
+        },
+        setQuestionsIdsRedux: (state, actions) => {
+            state.questionsIds = actions.payload;
         }
     }
 });
@@ -71,10 +91,15 @@ export const {
     setWeight,
     setHeight,
     setAge,
+    setAddress,
     setBloodType,
     setRate,
+    setQuestionsIdsRedux,
+    setEmail,
     setLocation,
-    setState
+    setState,
+    setEmergencyNumber,
+    setDate
 } = registerRedux.actions;
 
 export default registerRedux.reducer;

@@ -1,16 +1,17 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 // import loginBanner from '../../assets/images/login-banner.png';
 import Logo from "../../assets/img/logo.png";
 import camera from "../../assets/icons/camera.svg";
-import { Link, useNavigate  } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { setImgProfile } from '../../../store/PatientRegister/patient';
 import Alert from '../Alert/Alert';
 
-const Patientregisterstepone = () => {
+const Patientregisterstepone = ({ handlerPatientRegisterOne, handlerPatientTwo}) => {
 
   const dispatch = useDispatch();
-  const navigation = useNavigate ();
+  const navigation = useNavigate();
   const registerState = useSelector((state) => state.patient);
 
   const [count, setCount] = useState(0);
@@ -20,9 +21,20 @@ const Patientregisterstepone = () => {
 
 
   const hanlderRegister = (e) => {
-  e.preventDefault();
-
-    navigation("/admin/patientregisterstep-2");
+    e.preventDefault();
+  
+    if(registerState.imgProfile){
+    handlerPatientRegisterOne(false);
+    handlerPatientTwo(true);
+    }
+    if(!registerState.imgProfile){
+      setCount(1);
+      setType("warning");
+      setMessage("Please upload Image Profile.");
+      setShowAlert(true);
+    }
+    
+    
   }
   const handlerUploadImage = (e) => {
 

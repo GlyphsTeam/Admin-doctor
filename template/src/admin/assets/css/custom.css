@@ -23,6 +23,16 @@
   position:absolute;
   left: -131px;
 }
+.settingFlex button{
+  position: relative;
+}
+.settingFlex button i{
+  margin:5px;
+}
+.patientImage{
+  height: 100px;
+  width: 100px;
+}
 .imgCertifcate{
   height: 100px !important;
     width: 100px !important;
@@ -45,6 +55,10 @@
 .removeImage{
 
 
+}
+.imageProfile{
+  width: 100px;
+  height: 100px;
 }
 a{
   text-decoration: none !important;

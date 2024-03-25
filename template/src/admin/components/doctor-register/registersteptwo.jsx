@@ -37,6 +37,7 @@ const Registersteptwo = ({ backendUrl }) => {
   const getSpecialeies = async () => {
     await axios.get(`https://${backendUrl}/specialties`).then((res) => {
       setAllSpeciales(res.data.data);
+      console.log("allSpeciales>>>>",res.data)
     }).catch((err) => {
       console.log(err);
     })
@@ -149,8 +150,7 @@ const Registersteptwo = ({ backendUrl }) => {
         dispatch(setImage(null));
         dispatch(setName(""));
         dispatch(setCertfcation(null));
-        // navgation("/admin/doctor-list");
-        console.log("res>>>>>", res)
+        navgation("/admin/doctor-list");
       }).catch((err) => {
         console.log(err)
         console.log(err?.status_number)

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 // import loginBanner from '../../assets/images/login-banner.png';
 import Logo from "../../assets/img/logo.png";
@@ -20,20 +21,25 @@ import {
   setWeight,
 } from '../../../store/PatientRegister/patient';
 import Alert from "../Alert/Alert";
-const Patientregisterstepfive = () => 
-{
+import axios from 'axios';
+
+const Patientregisterstepfive = ({ backendUrl }) => {
   const dispatch = useDispatch();
   const navgation = useNavigate();
-  const registerState = useSelector((state) => state.register);
+  const registerState = useSelector((state) => state.patient);
   const [type, setType] = useState("");
   const [message, setMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [count, setCount] = useState(0);
-
-  const hanlderSubmit = (e) => {
+  const token = localStorage.getItem("access_token");
+  const hanlderSubmit = async (e) => {
     e.preventDefault();
     const city = e.target.city.value;
     const state = e.target.state.value;
+    const pregnant = e.target.pregnant.value;
+    const taking_medications = e.target.taking_medications.value;
+    const allergies = e.target.allergies.value;
+
 
     if (state === "") {
       setCount(1);
@@ -41,46 +47,64 @@ const Patientregisterstepfive = () =>
       setMessage("The state field is required");
       setShowAlert(true);
     }
-    
+
     if (city === "") {
       setCount(1);
       setType("warning");
       setMessage("The city field is required");
       setShowAlert(true);
     }
-    
+
     if (city !== "" && state !== "") {
 
       let formData = new FormData();
 
       formData.append("name", registerState?.name);
-      formData.append("phone", registerState?.phone);
+      formData.append("email", registerState.email)
+      formData.append("date_birth", registerState.date)
+      formData.append("emergency_number", registerState.emergency_number)
+      formData.append("country", state)
+      formData.append("city", city)
+      formData.append("address", registerState.address)
+      formData.append("phone_number", registerState?.phone);
+      formData.append("guard", "patient")
       formData.append("password", registerState.password);
       formData.append("image", registerState.imgProfile);
       formData.append("age", registerState.age);
-      formData.append("bloodType", registerState.bloodType);
+      formData.append("blood_type", registerState.bloodType);
       formData.append("location", registerState.location);
       formData.append("gender", registerState.gender);
       formData.append("height", registerState.height);
       formData.append("weight", registerState.weight);
       formData.append("rate", registerState.rate);
-      formData.append("state", registerState.state);
+      // formData.append("state", registerState.state);
+      formData.append("taking_medications", taking_medications);
+      formData.append("pregnant", pregnant);
+      formData.append("allergies", allergies);
+      await axios.post(`https://${backendUrl}/register`, formData, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      }).then(() => {
+        dispatch(setAge(""));
+        dispatch(setBloodType(""));
+        dispatch(setPasswordRegister(""));
+        dispatch(setGenderRegister(""));
+        dispatch(setWeight(""));
+        dispatch(setImgProfile(null));
+        dispatch(setRate(""));
+        dispatch(setLocation(""));
+        dispatch(setState(""));
+        dispatch(setHeight(""));
+        dispatch(setPhoneRegister(""));
+        dispatch(setNameRegister(""));
+        navgation("/admin/patient-list")
+
+      }).catch((err) => {
+        console.log(err)
+      })
 
 
-      dispatch(setAge(""));
-      dispatch(setBloodType(""));
-      dispatch(setPasswordRegister(""));
-      dispatch(setGenderRegister(""));
-      dispatch(setWeight(""));
-      dispatch(setImgProfile(null));
-      dispatch(setRate(""));
-      dispatch(setLocation(""));
-      dispatch(setState(""));
-      dispatch(setHeight(""));
-      dispatch(setPhoneRegister(""));
-      dispatch(setNameRegister(""));
-
-      navgation("/patient/dashboard")
     }
   }
 
@@ -111,7 +135,7 @@ const Patientregisterstepfive = () =>
                               2
                             </Link>
                           </li>
-                       
+
                           <li>
                             <Link to="#" className="active">
                               3
@@ -151,57 +175,44 @@ const Patientregisterstepfive = () =>
                             <option value={2}>State 2</option>
                           </select>
                         </div>
-                        <div className="form-group">
-                          <label>Select City</label>
-                          <select
-                            className="form-select form-control"
-                            id="city"
-                            name="city"
-                            tabIndex={-1}
-                            aria-hidden="true"
-                          // onChange={(e) => dispatch(setLocation(e.target.value))}
-                          >
-                            <option value="">Select Your City</option>
-                            <option value={1}>City 1</option>
-                            <option value={2}>City 2</option>
-                          </select>
-                        </div>
+
                         <div className="form-group">
                           <label>Are you currently taking any medications? if yes, please list them.</label>
                           <input
-                           type="text"
-                           name="medication"
-                           id="medication"
-                           className="form-control"
+                            type="text"
+                            name="taking_medications"
+                            id="taking_medications"
+                            className="form-control"
 
                           />
                         </div>
                         <div className="form-group">
                           <label>Do youhave any known allergies to medications or substances?</label>
                           <input
-                           type="text"
-                           name="medication"
-                           id="medication"
-                           className="form-control"
+                            type="text"
+                            name="allergies"
+                            id="allergies"
+                            className="form-control"
                           />
                         </div>
                         <div className="form-group">
                           <label>For female patients: Are you currently pregnant?</label>
                           <select
                             className="form-select form-control"
-                            id="city"
-                            name="city"
+                            id="pregnant"
+                            name="pregnant"
                             tabIndex={-1}
                             aria-hidden="true"
                           // onChange={(e) => dispatch(setLocation(e.target.value))}
                           >
                             <option value="">Select </option>
                             <option value={1}>Yes</option>
-                            <option value={2}>No</option>
+                            <option value={0}>No</option>
                           </select>
                         </div>
                         <div className="mt-5">
                           <button
+                          type="submit"
                             className="btn btn-primary w-100 btn-lg login-btn step5_submit"
                           >
                             continue{" "}

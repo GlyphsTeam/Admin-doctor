@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useRef, useState } from "react";
 // import { useHistory } from "react-router-dom";
 import loginBanner from "../../assets/img/login-banner.png";
@@ -7,9 +8,13 @@ import Header from "../header/index";
 import { useDispatch } from 'react-redux'
 // import Footer from "../../components/";
 import Alert from '../Alert/Alert';
-
+import RegisterOne from './registerstepone';
+import RegisterTwo from './registersteptwo';
 
 const DoctorRegister = (props) => {
+  const [register, setRegister] = useState(true);
+  const [registerOne, setRegisterOne] = useState(false);
+  const [registerTwo, setRegisterTwo] = useState(false);
 
   const name = useRef(null);
   const phoneNumber = useRef(null);
@@ -63,16 +68,27 @@ const DoctorRegister = (props) => {
       dispatch(setPassword(passwordValue));
       dispatch(setPhone(phoneValue));
       dispatch(setEmail(emailValue));
-
-      navgation("/admin/registerstepone")
+      handlerRegisterDoctor(false);
+      handlerRegisterOne(true);
     }
 
 
   }
+  const handlerRegisterDoctor = (status) => { 
+    setRegister(status);
+  }
+  const handlerRegisterOne = (status) => {
+    setRegisterOne(status);
+  };
+
+  const handlerRegisterTwo = (status) => {
+    setRegisterTwo(status);
+  };
+
   return (
     <>
       <Header {...props} />
-      <div className="content top-space">
+      {register && <div className="content top-space">
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-8 offset-md-2">
@@ -134,6 +150,9 @@ const DoctorRegister = (props) => {
           </div>
         </div>
       </div>
+      }
+      {registerOne && <RegisterOne handlerRegisterTwo={handlerRegisterTwo} handlerRegisterOne={handlerRegisterOne}/>}
+      {registerTwo && <RegisterTwo backendUrl={props.backendUrl}/>}
       <Alert
         count={count}
         message={message}

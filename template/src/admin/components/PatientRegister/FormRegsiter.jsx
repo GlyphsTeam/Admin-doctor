@@ -1,12 +1,15 @@
+/* eslint-disable react/prop-types */
 import React, { useRef, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setNameRegister, setPhoneRegister, setPasswordRegister } from '../../../store/PatientRegister/patient';
+import { setNameRegister, setPhoneRegister, setPasswordRegister,setEmail } from '../../../store/PatientRegister/patient';
 import Alert from '../Alert/Alert';
 import { emailValidation } from '../../../helper/helper';
-function FormRegsiter() {
-    const FirstName = useRef(null);
-    const LastName = useRef(null);
+import RegisterOne from '../registerPatient/patientregistersPatienttepone';
+import RegisterTwo from '../registerPatient/patientregistersteptwo';
+
+function FormRegsiter({backendUrl, patientRegister, patientRegisterOne, handlerPatientRegister, handlerPatientRegisterOne, handlerPatientTwo, registerTwo }) {
+    const firstName = useRef(null);
     const emailRef = useRef(null);
     const phoneNumber = useRef(null);
     const password = useRef(null);
@@ -28,8 +31,7 @@ function FormRegsiter() {
     const handlerRegsiter = (e) => {
         e.preventDefault();
 
-        const nameValue = FirstName.current?.value;
-        const lastValue = LastName.current?.value;
+        const nameValue = firstName.current?.value;
         const phoneValue = phoneNumber.current?.value;
         const passwordValue = password.current?.value;
         const emailValue = emailRef.current?.value;
@@ -54,10 +56,6 @@ function FormRegsiter() {
 
         }
 
-        if (lastValue === "") {
-            showAlertWithMessage("The  Last Name is required.", "warning");
-
-        }
         if (nameValue === "") {
             showAlertWithMessage("The  First Name is required.", "warning");
         }
@@ -66,7 +64,6 @@ function FormRegsiter() {
         if (nameValue !== ""
             && phoneValue !== ""
             && passwordValue !== ""
-            && lastValue !== ""
             && emailValue !== ""
             && !emailTest
         ) {
@@ -74,31 +71,27 @@ function FormRegsiter() {
             dispatch(setNameRegister(nameValue));
             dispatch(setPhoneRegister(phoneValue));
             dispatch(setPasswordRegister(passwordValue));
+            dispatch(setEmail(emailValue));
+            
+            handlerPatientRegister(false);
+            handlerPatientRegisterOne(true);
 
-            navgation("/admin/patientregisterstep-1");
         }
 
 
     }
     return (
         <>
-            <form onSubmit={handlerRegsiter}>
+            {patientRegister && <form onSubmit={handlerRegsiter}>
                 <div className="form-group form-focus">
                     <input
-                        ref={FirstName}
+                        ref={firstName}
                         type="text"
                         className="form-control floating"
                     />
-                    <label className="focus-label">First Name</label>
+                    <label className="focus-label">Full Name</label>
                 </div>
-                <div className="form-group form-focus">
-                    <input
-                        ref={LastName}
-                        type="text"
-                        className="form-control floating"
-                    />
-                    <label className="focus-label">Last Name</label>
-                </div>
+
                 <div className="form-group form-focus">
                     <input
                         ref={emailRef}
@@ -151,7 +144,8 @@ function FormRegsiter() {
                         </Link>
                     </div>
                 </div>
-            </form>
+            </form>}
+           
             <Alert
                 count={count}
                 message={message}
@@ -160,6 +154,8 @@ function FormRegsiter() {
                 show={showAlert}
                 type={type}
             />
+             {patientRegisterOne && <RegisterOne handlerPatientRegisterOne={handlerPatientRegisterOne} handlerPatientTwo={handlerPatientTwo}/>}
+            {registerTwo && <RegisterTwo backendUrl={backendUrl}/>}
         </>
     )
 }

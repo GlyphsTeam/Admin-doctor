@@ -72,6 +72,7 @@ const AppRouters = function () {
     let backendUrl = "arab-texas.com/api";
     const dispatch = useDispatch();
     const authState = useSelector((state) => state.auth);
+    const token = localStorage.getItem("access_token");
 
     useEffect(() => {
         if (localStorage.getItem("access_token")) {
@@ -222,8 +223,8 @@ const AppRouters = function () {
                             }
 
                         />
-                        <Route path="/admin/patient-list" exact element={authState.isAuth ? (
-                            <Patients />
+                        <Route path="/admin/patient-list" exact element={token ? (
+                            <Patients backendUrl={backendUrl}/>
                         ) : (
                             <Navigate to="/admin/login" />
                         )} />
@@ -306,8 +307,8 @@ const AppRouters = function () {
                         <Route
                             path="/admin/patient-register"
                             exact
-                            element={authState.isAuth ? (
-                                <PatientRegister />
+                            element={token ? (
+                                <PatientRegister backendUrl={backendUrl}/>
                             ) : (
                                 <Navigate to="/admin/login" />
                             )
@@ -337,12 +338,12 @@ const AppRouters = function () {
                         <Route
                             path="/admin/patientregisterstep-5"
                             exac
-                            element={<Patientregisterstepfive />}
+                            element={<Patientregisterstepfive backendUrl={backendUrl}/>}
                         />
                         <Route
                             path="/admin/doctor-register"
                             exact
-                            element={<DoctorRegister />}
+                            element={<DoctorRegister backendUrl={backendUrl}/>}
                         />
                         <Route
                             path="/admin/registerstepone"
@@ -356,8 +357,8 @@ const AppRouters = function () {
                         />
 
                         <Route path="/admin/settings" exact element={
-                            authState.isAuth ? (
-                                <Settings />
+                            token ? (
+                                <Settings backendUrl={backendUrl}/>
                             ) : (
                                 <Navigate to="/admin/login" />
                             )} />
@@ -399,8 +400,8 @@ const AppRouters = function () {
                             )
                         } />
                         <Route path="/admin/pending-blog" exact element={<PendingBlog />} />
-                        <Route path="/admin/profile" exact element={authState.isAuth ? (
-                            <Profile />
+                        <Route path="/admin/profile" exact element={token ? (
+                            <Profile backendUrl={backendUrl}/>
                         ) : (
                             <Navigate to="/admin/login" />
                         )} />

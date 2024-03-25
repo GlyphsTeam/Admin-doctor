@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import loginBanner from '../../assets/images/login-banner.png';
 import Logo from "../../assets/img/logo.png";
 // import camera from '../../assets/images/icons/camera.svg';
@@ -11,69 +12,89 @@ import {
   setWeight,
   setAge,
   setBloodType,
-  setRate
+  setRate,
+  setEmergencyNumber,
+  setDate,
+  setQuestionsIdsRedux,
+  setAddress
 } from '../../../store/PatientRegister/patient';
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import Alert from "../Alert/Alert";
+import axios from 'axios';
 
-const Patientregistersteptwo = () => {
+const Patientregistersteptwo = ({ backendUrl }) => {
 
 
   const [type, setType] = useState("");
   const [message, setMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [count, setCount] = useState(0);
+  const [questions, setQuestions] = useState(null);
+  const [questionsIds, setQuestionsIds] = useState([]);
+
   const dispatch = useDispatch();
   const navgation = useNavigate();
 
+  const getQuestions = async () => {
+    await axios.get(`https://${backendUrl}/medical_conditions`).then((res) => {
+      console.log("resS", res.data)
+      setQuestions(res.data?.data);
+
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+  useEffect(() => {
+    getQuestions();
+  }, []);
+  const addIdsQuestions = (id, checked) => {
+    if (checked) {
+      setQuestionsIds(prev => [...prev, id]);
+    } else {
+      setQuestionsIds(prev => prev.filter(item => item !== id));
+    }
+  };
 
   const handlerRegister = (e) => {
     e.preventDefault();
-    
+
     const gender = e.target.gender.value;
     const weight = e.target.weight.value;
     const height = e.target.height.value;
     const age = e.target.age.value;
     const blood = e.target.blood_group.value;
     const rate = e.target.heartrate.value;
-    // const date = e.target.date.value;
-    // const emergency = e.target.emergency.value;
-    // const address = e.target.address.value;
-    // const heart_rate = e.target.heartrate.value;
+    const date = e.target.date.value;
+    const emergency = e.target.emergency.value;
+    const address = e.target.address.value;
     // const bloodPressure = e.target.bp.value;
-    
 
-    if (rate === "") {
-      setCount(1);
-      setMessage("The rate field is required");
-      setShowAlert(true);
-      setType("warning");
-    }
-    if (blood === "") {
-      setCount(1);
-      setMessage("The blood field is required");
-      setShowAlert(true);
-      setType("warning")
-    }
-    if (age === "") {
-      setCount(1);
-      setMessage("The Age field is required");
-      setShowAlert(true);
-      setType("warning");
-    }
-    if (height === "") {
-      setCount(1);
-      setMessage("The height field is required");
-      setShowAlert(true);
-      setType("warning");
-    }
-    if (weight === "") {
-      setCount(1);
-      setMessage("The weight field is required");
-      setShowAlert(true);
-      setType("warning");
-    }
+
+    // if (blood === "") {
+    //   setCount(1);
+    //   setMessage("The blood field is required");
+    //   setShowAlert(true);
+    //   setType("warning")
+    // }
+    // if (age === "") {
+    //   setCount(1);
+    //   setMessage("The Age field is required");
+    //   setShowAlert(true);
+    //   setType("warning");
+    // }
+    // if (height === "") {
+    //   setCount(1);
+    //   setMessage("The height field is required");
+    //   setShowAlert(true);
+    //   setType("warning");
+    // }
+    // if (weight === "") {
+    //   setCount(1);
+    //   setMessage("The weight field is required");
+    //   setShowAlert(true);
+    //   setType("warning");
+    // }
     if (gender === "") {
       setCount(1);
       setMessage("The gender field is required");
@@ -81,11 +102,12 @@ const Patientregistersteptwo = () => {
       setType("warning");
     }
 
-    if (weight !== "" &&
-      height !== "" &&
-      age !== "" &&
-      blood !== "" &&
-      rate !== "" &&
+    if (
+      // weight !== "" &&
+      // height !== "" &&
+      // age !== "" &&
+      // blood !== "" &&
+      // rate !== "" &&
       gender !== ""
     ) {
 
@@ -95,6 +117,10 @@ const Patientregistersteptwo = () => {
       dispatch(setRate(rate));
       dispatch(setHeight(height));
       dispatch(setWeight(weight))
+      dispatch(setEmergencyNumber(emergency));
+      dispatch(setDate(date));
+      dispatch(setAddress(address))
+      dispatch(setQuestionsIdsRedux(questionsIds))
       navgation("/admin/patientregisterstep-5");
     }
 
@@ -146,7 +172,7 @@ const Patientregistersteptwo = () => {
                                 type="radio"
                                 id="male"
                                 name="gender"
-                                defaultValue="Male"
+                                defaultValue="male"
                               // onChange={(e) => dispatch(setGenderRegister(e.target.value))}
                               />
                               <label htmlFor="male">
@@ -162,7 +188,7 @@ const Patientregistersteptwo = () => {
                                 id="female"
                                 name="gender"
                                 // onChange={(e) => dispatch(setGenderRegister(e.target.value))}
-                                defaultValue="Female"
+                                defaultValue="female"
                               />
                               <label htmlFor="female">
                                 <span className="gender-icon">
@@ -324,234 +350,28 @@ const Patientregistersteptwo = () => {
                               <option value={2}>2</option>
                             </select>
                           </div>
-                          <div className="form-group">
-                            <label>Blood Pressure</label>
-                            <select
-                              className="form-select form-control"
-                              id="bp"
-                              name="bp"
-                              tabIndex={-1}
-                              aria-hidden="true"
-                            >
-                              <option value="">
-                                Select Your Blood Pressure
-                              </option>
-                              <option value={1}>1</option>
-                              <option value={2}>2</option>
-                            </select>
-                          </div>
-    
+
+
                           <div className="checklist-col pregnant-col">
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Cardiovascilar Diseases (e.g, hypertension, coronary artery disease)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
+                            {questions?.map((item) => {
+                              return <div className="remember-me-col d-flex justify-content-between" key={item.id}>
+                                <span className="mt-1">
+                                  {item?.title}
+                                </span>
+                                <label className="custom_check">
+                                  <input
+                                    type="checkbox"
+                                    value={item.id}
+                                    name="artery"
+                                    id="artery"
+                                    onChange={(e) => addIdsQuestions(item.id, e.target.checked)}
 
-                                  name="artery"
-                                  id="artery"
+                                  />
+                                  <span className="checkmark" />
+                                </label>
+                              </div>
+                            })}
 
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div
-                              className="remember-me-col"
-                              id="cancer_div"
-                              style={{ display: "none" }}
-                            >
-                              <div className="condition_input">
-                                <input
-                                  type="text"
-                                  id="conditions"
-                                  name="conditions[]"
-                                  className="form-control"
-                                  placeholder=""
-                                />
-                              </div>
-                              <Link to="#" className="add_condition">
-                                <i className="fa fa-plus" />
-                              </Link>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Endocrine Disorders (e.g, diabetes, thyroid disorders)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Allergies and Immunodeficiency (e.g, asthma, immunodeficiency)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Kidney Diseases
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Gastrointestinal and liver Diseases (e.g, irritable bowel syndrome, hepatitis)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Respiratory Diseases (e.g asthma, chronic abstructive pulmonary disease)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Blood Disorders (e.g, anemia, leukemia, clotting disorders)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Psychiatric or Neurological Disorders (e.g, depression, epilepsy)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Blood Disordes (e.g, anemia, leukemia, clotting disorders)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Muscular or Joint Disorders (e.g, arthritis, fibromyalgia)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div className="remember-me-col d-flex justify-content-between">
-                              <span className="mt-1">
-                                Reproductive Diseases (e.g, polycystic ovary syndrome, endometriosis)
-                              </span>
-                              <label className="custom_check">
-                                <input
-                                  type="checkbox"
-                                  className=""
-                                  name="medicine"
-                                  id="medicine"
-                                  defaultValue={1}
-                                />
-                                <span className="checkmark" />
-                              </label>
-                            </div>
-                            <div
-                              className="remember-me-col"
-                              id="medicine_div"
-                              style={{ display: "none" }}
-                            >
-                              <div className="medicine_input">
-                                <input
-                                  type="text"
-                                  id="medicine_name"
-                                  name="medicine_name[]"
-                                  defaultValue="medicine"
-                                  className="form-control"
-                                  placeholder="Enter medicine_name"
-                                />
-                                <input
-                                  type="text"
-                                  defaultValue="medicine"
-                                  id="dosage"
-                                  name="dosage[]"
-                                  className="form-control"
-                                  placeholder="Enter dosage"
-                                />
-                              </div>
-                              <Link to="#" className="add_medicine">
-                                <i className="fa fa-plus" />
-                              </Link>
-                            </div>
                           </div>
                         </div>
                         <div className="mt-5">

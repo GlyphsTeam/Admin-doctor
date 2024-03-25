@@ -1,13 +1,14 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 // import loginBanner from '../../../assets/images/login-banner.png';
 import Logo from "../../assets/img/logo.png";
 import camera from "../../assets/icons/camera.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setImage } from '../../../store/DoctorRegister/register';
 import { useDispatch, useSelector } from 'react-redux';
 import Alert from '../Alert/Alert';
 
-const Registerstepone = () => {
+const Registerstepone = ({ handlerRegisterTwo, handlerRegisterOne}) => {
   const dispatch = useDispatch();
   const navgation = useNavigate();
   const imageUrl = useSelector((state) => state.register);
@@ -48,7 +49,9 @@ const Registerstepone = () => {
     }
 
     else {
-      navgation("/admin/register-step-2");
+      // navgation("/admin/register-step-2");
+      handlerRegisterTwo(true);
+      handlerRegisterOne(false);
     }
   }
   return (
@@ -65,21 +68,7 @@ const Registerstepone = () => {
                     <div className="logo-icon">
                       <img src={imageUrl.img ? URL.createObjectURL(imageUrl.img) : Logo} alt="" />
                     </div>
-                    <div className="step-list">
-                      <ul>
-                        <li>
-                          <Link to="#" className="active">
-                            1
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="#">2</Link>
-                        </li>
-                        <li>
-                          <Link to="#">3</Link>
-                        </li>
-                      </ul>
-                    </div>
+
                     <form onSubmit={hanlderNextRegister} >
                       <div className="profile-pic-col">
                         <h3>Profile Picture</h3>
