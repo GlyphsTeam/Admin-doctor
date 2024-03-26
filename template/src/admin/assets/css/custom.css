@@ -19,12 +19,18 @@
   color: #fff;
   font-weight: 600;
 }
+.genderFlex{
+  display: flex;
+}
 .dropdownMenu{
   position:absolute;
   left: -131px;
 }
 .settingFlex button{
   position: relative;
+}
+.addressTitle{
+  margin-top: 30px;
 }
 .settingFlex button i{
   margin:5px;

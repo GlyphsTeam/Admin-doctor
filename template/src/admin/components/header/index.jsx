@@ -255,8 +255,7 @@ const Header = (props) => {
               <span className="user-img">
                 <img
                   className="rounded-circle"
-                  src={avatar01}
-                  width={31}
+                  src={localStorage.getItem("image")}                  width={31}
 
                   alt="Ryan Taylor"
                 />
@@ -266,7 +265,7 @@ const Header = (props) => {
               <div className="user-header">
                 <div className="avatar avatar-sm">
                   <img
-                    src={avatar01}
+                    src={localStorage.getItem("image")}
                     alt="User Image"
                     className="avatar-img rounded-circle"
                   />

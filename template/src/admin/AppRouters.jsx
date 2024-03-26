@@ -65,6 +65,7 @@ const Social = lazy(() => import("./components/SocialMedia/Social"));
 const EditSocial = lazy(() => import("./components/SocialMedia/EditSocial"));
 const AddSocial = lazy(() => import("./components/SocialMedia/AddSocial"));
 const Message = lazy(() => import("./components/Message/Message"));
+const DoctorRegisterNew = lazy(()=>import("./components/doctor-register/registerDoctor"));
 
 
 
@@ -343,7 +344,7 @@ const AppRouters = function () {
                         <Route
                             path="/admin/doctor-register"
                             exact
-                            element={<DoctorRegister backendUrl={backendUrl}/>}
+                            element={<DoctorRegisterNew backendUrl={backendUrl}/>}
                         />
                         <Route
                             path="/admin/registerstepone"

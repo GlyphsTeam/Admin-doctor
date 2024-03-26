@@ -19,9 +19,19 @@ const Profile = ({ backendUrl }) => {
   const [showAlert, setShowAlert] = useState(false);
   const dispatch = useDispatch();
   const [imageChange, setImageChange] = useState(null);
+  const [activeClassAbout, setActiveClassAbout] = useState(true);
+  const [activeClassPassword, setActiveClassPassword] = useState(false);
 
   const profileData = useSelector((state) => state.profile);
 
+  const handlerPasswordActive = () => {
+    setActiveClassAbout(false);
+    setActiveClassPassword(true);
+  }
+  const handlerAboutActive = () => {
+    setActiveClassAbout(true);
+    setActiveClassPassword(false);
+  }
 
   const getProfile = async () => {
     await axios.get(`https://${backendUrl}/admin/profile`, {
@@ -43,7 +53,7 @@ const Profile = ({ backendUrl }) => {
   const handlerEdit = () => {
     setEdit(!edit)
   }
-  const showAlertMessage = (message, type) => {
+  const showAlertWithMessage = (message, type) => {
     setCount(1);
     setType(type);
     setMessage(message);
@@ -55,16 +65,95 @@ const Profile = ({ backendUrl }) => {
     if (image?.type !== 'image/jpeg' &&
       image?.type !== 'image/png' &&
       image?.type !== 'image/jpg') {
-      showAlertMessage("The Image must be jpeg or png or jpg", "warning");
+      showAlertWithMessage("The Image must be jpeg or png or jpg", "warning");
     }
     else {
       setImageChange(image);
       setImage(URL.createObjectURL(image));
     }
   }
+  const handlerPasswordSubmit = async (e) => {
+    e.preventDefault();
+
+    const oldPassword = e.target.old.value;
+    const newPassword = e.target.new.value;
+    const confirmPassword = e.target.confirm.value;
+
+    if (!oldPassword) {
+      showAlertWithMessage(`The Old Password field is required`, 'warning');
+      return;
+    }
+    if (!newPassword) {
+      showAlertWithMessage(`The New Password field is required`, 'warning');
+      return;
+
+    }
+    if (!confirmPassword) {
+      showAlertWithMessage(`The Confirm Password field is required`, 'warning');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      showAlertWithMessage("The New Password and Confirm Password do not match.",'warning');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("password", oldPassword);
+    formData.append("new_password", newPassword);
+
+    await axios.post(`https://${backendUrl}/admin/profile/change_password`, formData, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    }).then(() => {
+      e.target.reset();
+
+      showAlertWithMessage(`Successfully updated password.`, 'success');
+
+    }).catch((err) => {
+      console.log(err);
+      showAlertWithMessage("Failed to update password.", "warnning");
+
+    })
+  }
+
   const handlerSubmit = async (e) => {
     e.preventDefault();
 
+    const fields = [
+      { value: e.target.name.value, message: "Name", formFeild: "name" },
+      { value: e.target.email.value, message: "Email", formFeild: "email" },
+      { value: e.target.mobile.value, message: "Phone", formFeild: "phone_number" }
+    ];
+
+    for (const field of fields) {
+      if (!field.value) {
+        showAlertWithMessage(`The ${field.message} field is required`, 'warning');
+        return;
+      }
+    }
+    if (!imageChange) {
+      showAlertWithMessage(`The Image field is required`, 'warning');
+      return;
+    }
+
+    const formData = new FormData();
+    fields.forEach(feild => formData.append(feild.formFeild, feild.value))
+    imageChange && formData.append("image", imageChange)
+
+    await axios.post(`https://${backendUrl}/admin/profile`, formData, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    }).then(() => {
+
+      getProfile();
+      showAlertWithMessage("Successfully updated settings.", "success")
+
+    }).catch((err) => {
+      console.log(err)
+      showAlertWithMessage("There is a problem with server");
+    })
   }
   return (
     <>
@@ -119,24 +208,54 @@ const Profile = ({ backendUrl }) => {
                 <ul className="nav nav-tabs nav-tabs-solid">
                   <li className="nav-item">
                     <a
-                      className="nav-link active"
+                      className={`nav-link ${activeClassAbout ? "active" : ""}`}
                       data-bs-toggle="tab"
-                      href="#per_details_tab"
+                      onClick={() => handlerAboutActive()}
                     >
                       About
                     </a>
                   </li>
                   <li className="nav-item">
                     <a
-                      className="nav-link"
+                      className={`nav-link ${activeClassPassword ? "active" : ""}`}
                       data-bs-toggle="tab"
-                      href="#password_tab"
+                      onClick={() => handlerPasswordActive()}
                     >
                       Password
                     </a>
                   </li>
                 </ul>
               </div>
+              {/* Change Password Tab */}
+              {activeClassPassword && <div id="password_tab" className={`${activeClassPassword ? "" : "tab-pane fade"}`}>
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title">Change Password</h5>
+                    <div className="row">
+                      <div className="col-md-10 col-lg-6">
+                        <form onSubmit={handlerPasswordSubmit}>
+                          <div className="form-group">
+                            <label>Old Password</label>
+                            <input type="password" className="form-control" id="old" name="old" />
+                          </div>
+                          <div className="form-group">
+                            <label>New Password</label>
+                            <input type="password" className="form-control" id="new" name="new" />
+                          </div>
+                          <div className="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" className="form-control" id="confirm" name="confirm" />
+                          </div>
+                          <button className="btn btn-primary" type="submit">
+                            Save Changes
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>}
+              {/* /Change Password Tab */}
               <div className="tab-content profile-tab-cont">
                 {/* Personal Details Tab */}
                 <div className="tab-pane fade show active" id="per_details_tab">
@@ -208,6 +327,8 @@ const Profile = ({ backendUrl }) => {
                                       <input
                                         type="text"
                                         className="form-control"
+                                        id="name"
+                                        name="name"
                                         defaultValue={profileData.profileData?.name}
                                       />
                                     </div>
@@ -216,6 +337,7 @@ const Profile = ({ backendUrl }) => {
                                     <div className="form-group">
                                       <label>Image</label>
                                       <input
+
                                         type="file"
                                         className="form-control"
                                         onChange={(e) => handlerImage(e)}
@@ -230,6 +352,8 @@ const Profile = ({ backendUrl }) => {
                                     <div className="form-group">
                                       <label>Email </label>
                                       <input
+                                        id="email"
+                                        name="email"
                                         type="email"
                                         className="form-control"
                                         defaultValue={profileData.profileData?.email}
@@ -240,6 +364,8 @@ const Profile = ({ backendUrl }) => {
                                     <div className="form-group">
                                       <label>Mobile</label>
                                       <input
+                                        id="mobile"
+                                        name="mobile"
                                         type="text"
                                         defaultValue={profileData.profileData?.phone_number}
                                         className="form-control"
@@ -264,36 +390,7 @@ const Profile = ({ backendUrl }) => {
                   {/* /Personal Details */}
                 </div>
                 {/* /Personal Details Tab */}
-                {/* Change Password Tab */}
-                <div id="password_tab" className="tab-pane fade">
-                  <div className="card">
-                    <div className="card-body">
-                      <h5 className="card-title">Change Password</h5>
-                      <div className="row">
-                        <div className="col-md-10 col-lg-6">
-                          <form>
-                            <div className="form-group">
-                              <label>Old Password</label>
-                              <input type="password" className="form-control" />
-                            </div>
-                            <div className="form-group">
-                              <label>New Password</label>
-                              <input type="password" className="form-control" />
-                            </div>
-                            <div className="form-group">
-                              <label>Confirm Password</label>
-                              <input type="password" className="form-control" />
-                            </div>
-                            <button className="btn btn-primary" type="submit">
-                              Save Changes
-                            </button>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* /Change Password Tab */}
+
               </div>
             </div>
           </div>

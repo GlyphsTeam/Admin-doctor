@@ -37,7 +37,7 @@ const Registersteptwo = ({ backendUrl }) => {
   const getSpecialeies = async () => {
     await axios.get(`https://${backendUrl}/specialties`).then((res) => {
       setAllSpeciales(res.data.data);
-      console.log("allSpeciales>>>>",res.data)
+    
     }).catch((err) => {
       console.log(err);
     })
