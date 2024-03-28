@@ -16,6 +16,7 @@ const Patients = lazy(() => import("./components/patients"));
 const Reviews = lazy(() => import("./components/reviews"));
 const Transaction = lazy(() => import("./components/transaction"));
 const Settings = lazy(() => import("./components/settings/index"));
+
 const InvoiceReport = lazy(() => import("./components/Reports/InvoiceReport/InvoiceReport"));
 const ProductList = lazy(() => import("./components/productlist"));
 const PharmacyList = lazy(() => import("./components/pharmacylist"));
@@ -47,7 +48,7 @@ const DoctorRegister = lazy(() => import("./components/doctor-register/index"));
 const Registerstepone = lazy(() => import("./components/doctor-register/registerstepone"));
 const Registersteptwo = lazy(() => import("./components/doctor-register/registersteptwo"));
 const AddSpecialities = lazy(() => import("./components/AddSpecialities/Form"));
-const EditSpecilities = lazy(()=>import("./components/AddSpecialities/EditSpecialites"));
+const EditSpecilities = lazy(() => import("./components/AddSpecialities/EditSpecialites"));
 
 const PatientRegister = lazy(() => import("./components/PatientRegister/PatientRegister"));
 const Patientregisterstepone = lazy(() => import("./components/registerPatient/patientregistersPatienttepone"));
@@ -60,14 +61,17 @@ const AddWelcome = lazy(() => import("./components/welcomeScreen/AddWelcome"))
 const EditWelcome = lazy(() => import("./components/welcomeScreen/EditWelcome"));
 const EditSlider = lazy(() => import("./components/sliders/EditSlider"));
 const AddSlider = lazy(() => import("./components/sliders/AddSliders"))
-const EditDoctor = lazy(() => import("./components/doctors/EditDoctors"));
 const Social = lazy(() => import("./components/SocialMedia/Social"));
 const EditSocial = lazy(() => import("./components/SocialMedia/EditSocial"));
 const AddSocial = lazy(() => import("./components/SocialMedia/AddSocial"));
 const Message = lazy(() => import("./components/Message/Message"));
-const DoctorRegisterNew = lazy(()=>import("./components/doctor-register/registerDoctor"));
-
-
+const DoctorRegisterNew = lazy(() => import("./components/doctor-register/registerDoctor"));
+const RegisterEdit = lazy(() => import("./components/doctor-register/registerEdit"));
+const AddPatient = lazy(() => import("./components/registerPatient/RegisterPatient"))
+const EditPatient = lazy(() => import("./components/registerPatient/PatientEdit"));
+const Branches = lazy(() => import("./components/Branches/Branches"));
+const AddBranches = lazy(() => import("./components/Branches/AddBranches"));
+const EditBranches = lazy(() => import("./components/Branches/EditBranche"));
 
 const AppRouters = function () {
     let backendUrl = "arab-texas.com/api";
@@ -94,6 +98,7 @@ const AppRouters = function () {
                             (
                                 <Dashboard />
                             )} />
+
                         <Route path="/admin" exact element={authState.isAuth ?
                             (
                                 <Dashboard backendUrl={backendUrl} />
@@ -206,26 +211,15 @@ const AppRouters = function () {
                             )
                         } />
                         <Route path="/admin/doctor-list" exact element={
-                            authState.isAuth ? (
+                            token ? (
                                 <Doctors backendUrl={backendUrl} />
                             ) : (
                                 <Navigate to="/admin/login" />
                             )
                         } />
-                        <Route
-                            path="/admin/doctor-edit"
-                            exact
-                            element={
-                                authState.isAuth ? (
-                                    <EditDoctor backendUrl={backendUrl} />
-                                ) : (
-                                    <Navigate to="/admin/login" />
-                                )
-                            }
 
-                        />
                         <Route path="/admin/patient-list" exact element={token ? (
-                            <Patients backendUrl={backendUrl}/>
+                            <Patients backendUrl={backendUrl} />
                         ) : (
                             <Navigate to="/admin/login" />
                         )} />
@@ -309,7 +303,18 @@ const AppRouters = function () {
                             path="/admin/patient-register"
                             exact
                             element={token ? (
-                                <PatientRegister backendUrl={backendUrl}/>
+                                <AddPatient backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )
+                            }
+
+                        />
+                        <Route
+                            path="/admin/patient-edit/:id"
+                            exact
+                            element={token ? (
+                                <EditPatient backendUrl={backendUrl} />
                             ) : (
                                 <Navigate to="/admin/login" />
                             )
@@ -339,12 +344,17 @@ const AppRouters = function () {
                         <Route
                             path="/admin/patientregisterstep-5"
                             exac
-                            element={<Patientregisterstepfive backendUrl={backendUrl}/>}
+                            element={<Patientregisterstepfive backendUrl={backendUrl} />}
                         />
                         <Route
                             path="/admin/doctor-register"
                             exact
-                            element={<DoctorRegisterNew backendUrl={backendUrl}/>}
+                            element={<DoctorRegisterNew backendUrl={backendUrl} />}
+                        />
+                        <Route
+                            path="/admin/doctor-edit/:id"
+                            exact
+                            element={<RegisterEdit backendUrl={backendUrl} />}
                         />
                         <Route
                             path="/admin/registerstepone"
@@ -359,7 +369,28 @@ const AppRouters = function () {
 
                         <Route path="/admin/settings" exact element={
                             token ? (
-                                <Settings backendUrl={backendUrl}/>
+                                <Settings backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )} />
+
+                        <Route path="/admin/branches" exact element={
+                            token ? (
+                                <Branches backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )} />
+
+                        <Route path="/admin/add-branche" exact element={
+                            token ? (
+                                <AddBranches backendUrl={backendUrl} />
+                            ) : (
+                                <Navigate to="/admin/login" />
+                            )} />
+
+                        <Route path="/admin/edit-branche/:id" exact element={
+                            token ? (
+                                <EditBranches backendUrl={backendUrl} />
                             ) : (
                                 <Navigate to="/admin/login" />
                             )} />
@@ -402,7 +433,7 @@ const AppRouters = function () {
                         } />
                         <Route path="/admin/pending-blog" exact element={<PendingBlog />} />
                         <Route path="/admin/profile" exact element={token ? (
-                            <Profile backendUrl={backendUrl}/>
+                            <Profile backendUrl={backendUrl} />
                         ) : (
                             <Navigate to="/admin/login" />
                         )} />

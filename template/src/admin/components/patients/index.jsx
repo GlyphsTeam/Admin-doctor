@@ -33,8 +33,11 @@ const Patients = ({ backendUrl }) => {
   }
 
   useEffect(() => {
-    getPatients();
-  }, [patientsState?.patientsData]);
+    if (patientsState?.patientsData === null) {
+      getPatients();
+
+    }
+  }, []);
 
   const deletePatient = async (id) => {
     await axios.delete(`https://${backendUrl}/admin/patients/${id}`, {
@@ -56,7 +59,7 @@ const Patients = ({ backendUrl }) => {
       dataIndex: "Patient Image",
       render: (text, record) => (
         <>
-          <img className="rounded-circle patientImage" src={record.image}/>
+          <img className="rounded-circle patientImage" src={record.image} />
         </>
       ),
       sorter: (a, b) => a.PatientName.length - b.PatientName.length,
@@ -103,6 +106,14 @@ const Patients = ({ backendUrl }) => {
       dataIndex: "",
       render: (text, record) => (
         <div className="text-end" key={record.id}>
+          <Link
+            to={`/admin/patient-edit/${record.id}`}
+            className="me-1 btn btn-sm bg-success-light "
+            data-bs-toggle="modal"
+            data-bs-target="#edit_specialities_details"
+          >
+            <i className="fe fe-pencil"></i> Edit
+          </Link>
           <a
             onClick={() => deletePatient(record.id)}
             className="me-1 btn btn-sm bg-danger-light"

@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 import React, { useState } from "react";
 import { logoWhite } from "../imagepath";
 import { emailValidation } from "../../../helper/helper";
@@ -13,7 +13,7 @@ const Login = ({ backendUrl }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-
+ console.log("backendUrl>>",backendUrl)
 
   const [count, setCount] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
@@ -51,7 +51,7 @@ const Login = ({ backendUrl }) => {
 
 
 
-      await axios.post(`https://${backendUrl}/login`, formData, {
+      await axios.post(`https://arab-texas.com/api/login`, formData, {
         headers: {
           "Accept": "application/json",
           "Access-Control-Allow-Origin": "*",

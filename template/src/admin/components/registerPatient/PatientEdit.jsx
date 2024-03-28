@@ -3,49 +3,115 @@ import React, { useEffect, useState } from "react";
 // import FeatherIcon from "feather-icons-react";
 import SidebarNav from "../sidebar";
 import DatePicker from "react-datepicker";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import male from "../../assets/icons/male.png";
 import female from "../../assets/icons/female.png";
 import Alert from "../Alert/Alert";
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid';
-import { IoMdClose } from "react-icons/io";
 
 const Profile = ({ backendUrl }) => {
     const [selectedDate1, setSelectedDate1] = useState(new Date());
     const [image, setImage] = useState(null);
+    const [imageChange, setImageChange] = useState(null);
     const [allSpeciales, setAllSpeciales] = useState(null);
-    const [selectSpeical, setSelectSpeical] = useState([]);
+    const [patientInfo, setPatientInfo] = useState(null);
+    const [questions, setQuestions] = useState(null);
+    const [questionsIds, setQuestionsIds] = useState([]);
+    const [pregnant, setPregnant] = useState("");
+    const [blood_type, setBloodType] = useState("");
     const navgation = useNavigate();
+    const { id } = useParams();
+    const idUser = id;
+    const token = localStorage.getItem("access_token");
 
     const [count, setCount] = useState(0);
     const [type, setType] = useState("");
     const [message, setMessage] = useState("");
     const [showAlert, setShowAlert] = useState(false);
+    const [gender, setGender] = useState("");
+
+    const handleGenderChange = (event) => {
+        setGender(event.target.value);
+    };
     const handleDateChange1 = (date) => {
         setSelectedDate1(date);
     };
+
     const showAlertWithMessage = (message, type) => {
         setCount(1);
         setType(type);
         setMessage(message);
         setShowAlert(true);
     }
+    const getQuestions = async (id) => {
+        await axios.get(`https://${backendUrl}/admin/medical_conditions/${id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }).then((res) => {
+            console.log("resS", res.data)
+            setQuestions(res.data?.data);
+            let ids = res.data?.data.filter(item => item.is_check).map(item => item?.id);
+            
+            setQuestionsIds(ids)
 
+
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+    useEffect(() => {
+        if (!questions) {
+            getQuestions(id);
+        }
+    }, []);
+
+    const getPatientById = async (id) => {
+        await axios.get(`https://${backendUrl}/admin/patients/${id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }).then((res) => {
+            setPatientInfo(res.data.data);
+            setGender(res.data?.data?.gender);
+            setPregnant(res.data?.data?.pregnant)
+            setImage(res.data?.data?.image);
+            setBloodType(res.data?.data?.blood_type)
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+    useEffect(() => {
+        if (id) {
+            getPatientById(id);
+        }
+    }, [id]);
+    console.log("patientInfo", patientInfo);
+    console.log("questions>>", questions)
     const handlerRegister = async (e) => {
+
 
         e.preventDefault();
         const fields = [
-            { value: e.target.name.value, fieldName: "name", message: "Name"},
-            { value: e.target.password.value, fieldName: "password", message: "Password"},
-            { value: e.target.mobile.value, fieldName: "phone_number", message: "Phone Number"},
-            { value: e.target.email.value, fieldName: "email", message: "Email"},
-            { value: e.target.address.value, fieldName: "address", message: "Address"},
-            { value: e.target.gender.value, fieldName: "gender", message: "Gender"},
-            { value: e.target.date.value, fieldName: "date", message: "date"},
-            { value: e.target.idnumber.value, fieldName: "id_number", message: "ID Number"},
-            { value: e.target.nationality.value, fieldName: "nationality", message: "Nationality"},
-            { value: e.target.cardnumber.value, fieldName: "cardNumber", message: "cardnumber"},
+            { value: e.target.name.value, fieldName: "name", message: "Name" },
+            { value: e.target.mobile.value, fieldName: "phone_number", message: "Phone Number" },
+            { value: e.target.email.value, fieldName: "email", message: "Email" },
+            { value: e.target.address.value, fieldName: "address", message: "Address" },
+            // { value: e.target.gender.value, fieldName: "gender", message: "Gender" },
+            { value: e.target.height.value, fieldName: "height", message: "Height" },
+            { value: e.target.weight.value, fieldName: "weight", message: "Weight" },
+            { value: e.target.date.value, fieldName: "date_birth", message: "date" },
+            { value: e.target.blood_group.value, fieldName: "blood_type", message: "ID Number" },
+            // { value: e.target.nationality.value, fieldName: "nationality", message: "Nationality" },
+            { value: e.target.emergency.value, fieldName: "emergency_number", message: "emergency number" },
+            // { value: e.target.pregnant.value, fieldName: "pregnant", message: "pregnant" },
+            { value: e.target.taking_medications.value, fieldName: "taking_medications", message: "taking medications" },
+            { value: e.target.allergies.value, fieldName: "allergies", message: "allergies" },
+            { value: e.target.city.value, fieldName: "city", message: "city" },
+            { value: e.target.state.value, fieldName: "state", message: "state" },
+            { value: e.target.zip_code.value, fieldName: "zip_code", message: "zipcode" },
+            { value: e.target.age.value, fieldName: "age", message: "Age" },
         ];
 
         for (const feild of fields) {
@@ -58,32 +124,32 @@ const Profile = ({ backendUrl }) => {
         let formData = new FormData();
         const token = localStorage.getItem("access_token");
         fields.forEach(feild => formData.append(feild.fieldName, feild.value));
-        formData.append("image", image);
-
+        imageChange && formData.append("image", imageChange);
+        formData.append("gender", gender)
+        formData.append("pregnant", pregnant)
+        questionsIds?.forEach((question, index) => {
+            formData.append(`medical_conditions_list[${index}]`, question)
+        })
         //   formData.append("certifcate", registerState.certifcate);
         //   formData.append("uploadImg", image);
 
 
-        selectSpeical && selectSpeical.forEach((item, index) => {
-            formData.append(`specialization[${index}]`, item?.id);
-        })
-        formData.append("guard", "doctor");
-    
 
-        await axios.post(`https://${backendUrl}/register`, formData, {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        }).then(() => {
+        if (idUser) {
 
-            navgation("/admin/doctor-list");
-        }).catch((err) => {
-            console.log(err)
-            showAlertWithMessage(`There is a problem with server.`, "warning");
+            await axios.post(`https://${backendUrl}/admin/patients/${idUser}`, formData, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }).then(() => {
 
-        })
+                navgation("/admin/patient-list");
+            }).catch((err) => {
+                console.log(err)
+                showAlertWithMessage(`There is a problem with server.`, "warning");
 
-
+            })
+        }
     }
 
 
@@ -105,27 +171,25 @@ const Profile = ({ backendUrl }) => {
             showAlertWithMessage("The Image must be jpeg or png or jpg", "warning");
         }
         else {
-            setImage(image);
+            setImageChange(image)
+            setImage(URL.createObjectURL(image));
         }
     }
+    const addIdsQuestions = (id, checked) => {
+        if (checked) {
+            setQuestionsIds(prev => [...prev, id]);
+        } else {
+            setQuestionsIds(prev => prev.filter(item => item !== id));
+        }
+    };
+
     useEffect(() => {
         if (!allSpeciales) {
             getSpecialeies();
         }
     }, [])
-    const handlerSpesial = (value) => {
-        const specialte = allSpeciales?.find(item => item.id === parseInt(value));
-        setSelectSpeical([...selectSpeical, {
-            name: specialte?.name,
-            id: value
-        }]);
-    }
-    const handlerRemoveSpecial = (id) => {
-        setSelectSpeical(prev => {
-            return prev.filter(item => item.id !== id);
-        });
 
-    }
+
     return (
         <>
             <SidebarNav />
@@ -158,7 +222,7 @@ const Profile = ({ backendUrl }) => {
                                                 >
                                                     <div className="modal-content">
                                                         <div className="modal-header">
-                                                            <h5 className="modal-title">Doctor Register</h5>
+                                                            <h5 className="modal-title">Patient Register</h5>
                                                         </div>
                                                         <div className="modal-body">
                                                             <form onSubmit={handlerRegister}>
@@ -171,6 +235,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 className="form-control"
                                                                                 id="name"
                                                                                 name="name"
+                                                                                defaultValue={patientInfo?.name}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -182,6 +247,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 name="email"
                                                                                 id="email"
                                                                                 className="form-control"
+                                                                                defaultValue={patientInfo?.email}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -195,6 +261,7 @@ const Profile = ({ backendUrl }) => {
                                           defaultValue="24-07-1983"
                                         /> */}
                                                                                 <DatePicker
+                                                                                    defaultValue={patientInfo?.date}
                                                                                     className="form-control"
                                                                                     name="date"
                                                                                     id="date"
@@ -213,6 +280,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 type="text"
                                                                                 id="mobile"
                                                                                 name="mobile"
+                                                                                defaultValue={patientInfo?.phone_number}
                                                                                 className="form-control"
                                                                             />
                                                                         </div>
@@ -226,21 +294,11 @@ const Profile = ({ backendUrl }) => {
                                                                                 onChange={(e) => handlerImage(e)}
                                                                             />
                                                                             {image && <div>
-                                                                                <img className="imageProfile" src={image ? URL.createObjectURL(image) : ""} alt="image" />
+                                                                                <img className="imageProfile" src={image ? image : ""} alt="image" />
                                                                             </div>}
                                                                         </div>
                                                                     </div>
-                                                                    <div className="col-12 col-sm-6">
-                                                                        <div className="form-group">
-                                                                            <label>Create Password</label>
-                                                                            <input
-                                                                                type="password"
-                                                                                className="form-control"
-                                                                                id="password"
-                                                                                name="password"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
+
                                                                     <div className="text-start mt-2">
                                                                         <h4 className="mt-3">Select Your Gender</h4>
                                                                     </div>
@@ -253,6 +311,8 @@ const Profile = ({ backendUrl }) => {
                                                                                     name="gender"
                                                                                     defaultChecked=""
                                                                                     defaultValue="male"
+                                                                                    onChange={handleGenderChange}
+                                                                                    checked={gender === "male"}
                                                                                 />
                                                                                 <label htmlFor="test1">
                                                                                     <span className="gender-icon">
@@ -267,6 +327,8 @@ const Profile = ({ backendUrl }) => {
                                                                                     id="test2"
                                                                                     name="gender"
                                                                                     defaultValue="female"
+                                                                                    checked={gender === "female"}
+                                                                                    onChange={handleGenderChange}
                                                                                 />
                                                                                 <label htmlFor="test2">
                                                                                     <span className="gender-icon">
@@ -279,29 +341,28 @@ const Profile = ({ backendUrl }) => {
                                                                     </div>
                                                                     <div className="col-12 col-sm-6 m-t-10">
                                                                         <div className="form-group">
-                                                                            <label>Specialities</label>
-                                                                            <select
-                                                                                className="form-select form-control"
-                                                                                id="specialities"
-                                                                                name="specialities"
-                                                                                tabIndex={-1}
-                                                                                aria-hidden="true"
-                                                                                onChange={(e) => handlerSpesial(e.target.value)}
-                                                                            >
-                                                                                <option value="">Select</option>
+                                                                            <label>Height</label>
+                                                                            <input
+                                                                                type="text"
+                                                                                className="form-control"
+                                                                                name="height"
+                                                                                id="height"
+                                                                                defaultValue={patientInfo?.height}
 
-                                                                                {allSpeciales && allSpeciales?.map((item) => {
-                                                                                    return <option value={item?.id} key={item?.id}>{item?.name}</option>
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-12 col-sm-6 m-t-10">
+                                                                        <div className="form-group">
+                                                                            <label>Weight</label>
+                                                                            <input
+                                                                                type="text"
+                                                                                className="form-control"
+                                                                                name="weight"
+                                                                                id="weight"
+                                                                                defaultValue={patientInfo?.weight}
 
-                                                                                })}
-
-                                                                            </select>
-                                                                            {selectSpeical && selectSpeical.map((item) => {
-                                                                                return <div className="selectSpcialContanier" key={item?.id}>
-                                                                                    <li >{item?.name}</li>
-                                                                                    <IoMdClose onClick={() => handlerRemoveSpecial(item?.id)} className="closeBtn" />
-                                                                                </div>
-                                                                            })}
+                                                                            />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col-12 col-sm-6 m-t-10">
@@ -312,32 +373,152 @@ const Profile = ({ backendUrl }) => {
                                                                                 className="form-control"
                                                                                 name="nationality"
                                                                                 id="nationality"
+                                                                                defaultValue={patientInfo?.nationality}
 
                                                                             />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col-12 col-sm-6 m-t-10">
                                                                         <div className="form-group">
-                                                                            <label>Doctor ID Number</label>
+                                                                            <label>Age</label>
                                                                             <input
                                                                                 type="text"
                                                                                 className="form-control"
-                                                                                name="idnumber"
-                                                                                id="idnumber"
+                                                                                name="age"
+                                                                                id="age"
+                                                                                defaultValue={patientInfo?.age}
 
                                                                             />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col-12 col-sm-6 m-t-10">
                                                                         <div className="form-group">
-                                                                            <label>Residence Card Number (Validation)</label>
+                                                                            <label>Emergency Number</label>
                                                                             <input
                                                                                 type="text"
                                                                                 className="form-control"
-                                                                                name="cardnumber"
-                                                                                id="cardnumber"
+                                                                                name="emergency"
+                                                                                id="emergency"
+                                                                                defaultValue={patientInfo?.emergency_number}
 
                                                                             />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-12 col-sm-6 m-t-10">
+                                                                        <div className="form-group">
+                                                                            <label>Blood Type</label>
+                                                                            <select
+                                                                                className="form-select form-control"
+                                                                                id="blood_group"
+                                                                                name="blood_group"
+                                                                                tabIndex={-1}
+                                                                                value={blood_type}
+                                                                                onChange={(e) => setBloodType(e.target.value)}
+                                                                                aria-hidden="true"
+                                                                            >
+
+                                                                                <option value="A-">A-</option>
+                                                                                <option value="A+">A+</option>
+                                                                                <option value="B-">B-</option>
+                                                                                <option value="B+">B+</option>
+                                                                                <option value="AB-">AB-</option>
+                                                                                <option value="AB+">AB+</option>
+                                                                                <option value="O-">O-</option>
+                                                                                <option value="O+">O+</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-12 col-sm-6 m-t-10 checklist-col pregnant-col">
+                                                                        {questions?.slice(0, 7)?.map((item) => {
+                                                                            return <div className="remember-me-col d-flex justify-content-between" key={item.id}>
+                                                                                <span className="mt-1">
+                                                                                    {item?.title}
+                                                                                </span>
+                                                                                <label className="custom_check">
+                                                                                    <input
+                                                                                        type="checkbox"
+                                                                                        defaultChecked={item?.is_check}
+                                                                                        name="artery"
+                                                                                        id="artery"
+                                                                                        onChange={(e) => addIdsQuestions(item.id, e.target.checked)}
+
+                                                                                    />
+                                                                                    <span className="checkmark" />
+                                                                                </label>
+                                                                            </div>
+                                                                        })}
+
+                                                                    </div>
+                                                                    <div className="col-12 col-sm-6 m-t-10 checklist-col pregnant-col">
+                                                                        {questions?.slice(7)?.map((item) => {
+                                                                            return <div className="remember-me-col d-flex justify-content-between" key={item.id}>
+                                                                                <span className="mt-1">
+                                                                                    {item?.title}
+                                                                                </span>
+                                                                                <label className="custom_check">
+                                                                                    <input
+                                                                                        type="checkbox"
+                                                                                        defaultChecked={item?.is_check}
+                                                                                        name="artery"
+                                                                                        id="artery"
+
+                                                                                        onChange={(e) => addIdsQuestions(item.id, e.target.checked)}
+
+                                                                                    />
+                                                                                    <span className="checkmark" />
+                                                                                </label>
+                                                                            </div>
+                                                                        })}
+                                                                    </div>
+                                                                    <div className="col-12 col-sm-6">
+                                                                        <div className="form-group">
+                                                                            <label>Are you currently taking any medications? if yes, please list them.</label>
+                                                                            <input
+                                                                                type="text"
+                                                                                name="taking_medications"
+                                                                                id="taking_medications"
+                                                                                className="form-control"
+                                                                                defaultValue={patientInfo?.taking_medications}
+
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-12 col-sm-6">
+                                                                        <div className="form-group">
+                                                                            <label>Do youhave any known allergies to medications or substances?</label>
+                                                                            <input
+                                                                                type="text"
+                                                                                name="allergies"
+                                                                                id="allergies"
+                                                                                defaultValue={patientInfo?.allergies}
+                                                                                className="form-control"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-12 col-sm-6">
+                                                                        <div className="form-group">
+                                                                            <label>For female patients: Are you currently pregnant?</label>
+                                                                            <select
+                                                                                className="form-select form-control"
+                                                                                id="pregnant"
+                                                                                name="pregnant"
+                                                                                tabIndex={-1}
+                                                                                aria-hidden="true"
+                                                                                value={pregnant == 0 ? "No" : "Yes"}
+                                                                                onChange={(e) => {
+                                                                                    if (pregnant) {
+                                                                                        setPregnant(0)
+                                                                                    }
+                                                                                    else {
+                                                                                        setPregnant(1)
+                                                                                    }
+
+                                                                                }}
+                                                                            >
+                                                                                <option value="Yes">Yes</option>
+                                                                                <option value="No">No</option>
+                                                                            </select>
+
                                                                         </div>
                                                                     </div>
                                                                     <br />
@@ -353,6 +534,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 type="text"
                                                                                 className="form-control"
                                                                                 name="address"
+                                                                                defaultValue={patientInfo?.address}
                                                                                 id="address" />
                                                                         </div>
                                                                     </div>
@@ -361,8 +543,10 @@ const Profile = ({ backendUrl }) => {
                                                                             <label>City</label>
                                                                             <input
                                                                                 type="text"
+                                                                                id="city"
+                                                                                name="city"
                                                                                 className="form-control"
-                                                                                defaultValue="Miami"
+                                                                                defaultValue={patientInfo?.city}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -373,6 +557,9 @@ const Profile = ({ backendUrl }) => {
                                                                                 type="text"
                                                                                 className="form-control"
                                                                                 defaultValue="Florida"
+                                                                                id="state"
+                                                                                name="state"
+                                                                                defaultChecked={patientInfo?.state}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -382,7 +569,9 @@ const Profile = ({ backendUrl }) => {
                                                                             <input
                                                                                 type="text"
                                                                                 className="form-control"
-                                                                                defaultValue={22434}
+                                                                                defaultValue={patientInfo?.zip_code}
+                                                                                id="zip_code"
+                                                                                name="zip_code"
                                                                             />
                                                                         </div>
                                                                     </div>

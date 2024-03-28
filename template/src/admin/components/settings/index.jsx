@@ -16,6 +16,7 @@ const Settings = ({ backendUrl }) => {
   const [count, setCount] = useState(0);
   const settingState = useSelector((state) => state.setting);
   const [loading, setLoading] = useState(false);
+  
   const getSettings = async () => {
     const token = localStorage.getItem("access-token");
     await axios.get(`https://${backendUrl}/general_setting`, {

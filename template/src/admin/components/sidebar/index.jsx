@@ -154,6 +154,11 @@ const SidebarNav = () => {
                     <TiMessages /> <span> Messages</span>
                   </Link>
                 </li>
+                <li className={pathname?.includes("branches") ? "active" : ""}>
+                  <Link to="/admin/branches">
+                    <TiMessages /> <span>Branches</span>
+                  </Link>
+                </li>
                 <li className={pathname?.includes("settings") ? "active" : ""}>
                   <Link to="/admin/settings">
                     <i className="fe fe-vector"></i> <span> Settings</span>

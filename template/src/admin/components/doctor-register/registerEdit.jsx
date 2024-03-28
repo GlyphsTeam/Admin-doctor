@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // import FeatherIcon from "feather-icons-react";
 import SidebarNav from "../sidebar";
 import DatePicker from "react-datepicker";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import male from "../../assets/icons/male.png";
 import female from "../../assets/icons/female.png";
 import Alert from "../Alert/Alert";
@@ -14,14 +14,22 @@ import { IoMdClose } from "react-icons/io";
 const Profile = ({ backendUrl }) => {
     const [selectedDate1, setSelectedDate1] = useState(new Date());
     const [image, setImage] = useState(null);
+    const [imageChange, setImageChange] = useState(null);
     const [allSpeciales, setAllSpeciales] = useState(null);
     const [selectSpeical, setSelectSpeical] = useState([]);
+    const [doctorInfo, setDoctorInfo] = useState(null);
     const navgation = useNavigate();
+    const { id } = useParams();
 
     const [count, setCount] = useState(0);
     const [type, setType] = useState("");
     const [message, setMessage] = useState("");
     const [showAlert, setShowAlert] = useState(false);
+    const [gender, setGender] = useState("");
+
+    const handleGenderChange = (event) => {
+        setGender(event.target.value);
+    };
     const handleDateChange1 = (date) => {
         setSelectedDate1(date);
     };
@@ -31,21 +39,40 @@ const Profile = ({ backendUrl }) => {
         setMessage(message);
         setShowAlert(true);
     }
+    const getDoctorsById = async (id) => {
+        const token = localStorage.getItem("access_token");
+        await axios.get(`https://${backendUrl}/admin/doctors/${id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }).then((res) => {
+            setDoctorInfo(res.data.data);
+            setSelectSpeical(res.data.data.specialties);
+            setGender(res.data?.data?.gender)
 
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+    useEffect(() => {
+        if (id) {
+            getDoctorsById(id);
+        }
+    }, [id]);
+    console.log("doctorInfo", doctorInfo)
     const handlerRegister = async (e) => {
 
         e.preventDefault();
         const fields = [
-            { value: e.target.name.value, fieldName: "name", message: "Name"},
-            { value: e.target.password.value, fieldName: "password", message: "Password"},
-            { value: e.target.mobile.value, fieldName: "phone_number", message: "Phone Number"},
-            { value: e.target.email.value, fieldName: "email", message: "Email"},
-            { value: e.target.address.value, fieldName: "address", message: "Address"},
-            { value: e.target.gender.value, fieldName: "gender", message: "Gender"},
-            { value: e.target.date.value, fieldName: "date", message: "date"},
-            { value: e.target.idnumber.value, fieldName: "id_number", message: "ID Number"},
-            { value: e.target.nationality.value, fieldName: "nationality", message: "Nationality"},
-            { value: e.target.cardnumber.value, fieldName: "cardNumber", message: "cardnumber"},
+            { value: e.target.name.value, fieldName: "name", message: "Name" },
+            { value: e.target.mobile.value, fieldName: "phone_number", message: "Phone Number" },
+            { value: e.target.email.value, fieldName: "email", message: "Email" },
+            { value: e.target.address.value, fieldName: "address", message: "Address" },
+            { value: gender, fieldName: "gender", message: "Gender" },
+            { value: e.target.date.value, fieldName: "date", message: "date" },
+            { value: e.target.idnumber.value, fieldName: "id_number", message: "ID Number" },
+            { value: e.target.nationality.value, fieldName: "nationality", message: "Nationality" },
+            { value: e.target.cardnumber.value, fieldName: "cardNumber", message: "cardnumber" },
         ];
 
         for (const feild of fields) {
@@ -58,7 +85,8 @@ const Profile = ({ backendUrl }) => {
         let formData = new FormData();
         const token = localStorage.getItem("access_token");
         fields.forEach(feild => formData.append(feild.fieldName, feild.value));
-        formData.append("image", image);
+        imageChange && formData.append("image", imageChange);
+
 
         //   formData.append("certifcate", registerState.certifcate);
         //   formData.append("uploadImg", image);
@@ -68,9 +96,9 @@ const Profile = ({ backendUrl }) => {
             formData.append(`specialization[${index}]`, item?.id);
         })
         formData.append("guard", "doctor");
-    
 
-        await axios.post(`https://${backendUrl}/register`, formData, {
+
+        await axios.post(`https://${backendUrl}/admin/doctors/${id}`, formData, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -105,7 +133,8 @@ const Profile = ({ backendUrl }) => {
             showAlertWithMessage("The Image must be jpeg or png or jpg", "warning");
         }
         else {
-            setImage(image);
+            setImageChange(image)
+            setImage(URL.createObjectURL(image));
         }
     }
     useEffect(() => {
@@ -171,6 +200,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 className="form-control"
                                                                                 id="name"
                                                                                 name="name"
+                                                                                defaultValue={doctorInfo?.name}
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -181,6 +211,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 type="email"
                                                                                 name="email"
                                                                                 id="email"
+                                                                                defaultValue={doctorInfo?.email}
                                                                                 className="form-control"
                                                                             />
                                                                         </div>
@@ -198,6 +229,7 @@ const Profile = ({ backendUrl }) => {
                                                                                     className="form-control"
                                                                                     name="date"
                                                                                     id="date"
+                                                                                    defaultValue={doctorInfo?.date}
                                                                                     onChange={handleDateChange1}
                                                                                     selected={selectedDate1}
                                                                                     dateFormat="dd/MM/yyyy"
@@ -213,6 +245,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 type="text"
                                                                                 id="mobile"
                                                                                 name="mobile"
+                                                                                defaultValue={doctorInfo?.phone_number}
                                                                                 className="form-control"
                                                                             />
                                                                         </div>
@@ -225,22 +258,12 @@ const Profile = ({ backendUrl }) => {
                                                                                 className="form-control"
                                                                                 onChange={(e) => handlerImage(e)}
                                                                             />
-                                                                            {image && <div>
-                                                                                <img className="imageProfile" src={image ? URL.createObjectURL(image) : ""} alt="image" />
-                                                                            </div>}
+                                                                            <div className="mt-3">
+                                                                                <img className="imageProfile" src={image ? image : doctorInfo?.image} alt="image" />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="col-12 col-sm-6">
-                                                                        <div className="form-group">
-                                                                            <label>Create Password</label>
-                                                                            <input
-                                                                                type="password"
-                                                                                className="form-control"
-                                                                                id="password"
-                                                                                name="password"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
+
                                                                     <div className="text-start mt-2">
                                                                         <h4 className="mt-3">Select Your Gender</h4>
                                                                     </div>
@@ -251,8 +274,9 @@ const Profile = ({ backendUrl }) => {
                                                                                     type="radio"
                                                                                     id="test1"
                                                                                     name="gender"
-                                                                                    defaultChecked=""
+                                                                                    checked={gender == "male"}
                                                                                     defaultValue="male"
+                                                                                    onChange={handleGenderChange}
                                                                                 />
                                                                                 <label htmlFor="test1">
                                                                                     <span className="gender-icon">
@@ -267,6 +291,10 @@ const Profile = ({ backendUrl }) => {
                                                                                     id="test2"
                                                                                     name="gender"
                                                                                     defaultValue="female"
+                                                                                    checked={gender == "female"}
+                                                                                    onChange={handleGenderChange}
+
+
                                                                                 />
                                                                                 <label htmlFor="test2">
                                                                                     <span className="gender-icon">
@@ -312,6 +340,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 className="form-control"
                                                                                 name="nationality"
                                                                                 id="nationality"
+                                                                                defaultValue={doctorInfo?.nationality}
 
                                                                             />
                                                                         </div>
@@ -324,6 +353,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 className="form-control"
                                                                                 name="idnumber"
                                                                                 id="idnumber"
+                                                                                defaultValue={doctorInfo?.id_number}
 
                                                                             />
                                                                         </div>
@@ -353,6 +383,7 @@ const Profile = ({ backendUrl }) => {
                                                                                 type="text"
                                                                                 className="form-control"
                                                                                 name="address"
+                                                                                defaultValue={doctorInfo?.address}
                                                                                 id="address" />
                                                                         </div>
                                                                     </div>
